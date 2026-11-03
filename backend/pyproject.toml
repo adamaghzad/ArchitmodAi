@@ -1,0 +1,34 @@
+[project]
+name = "architmodai-backend"
+version = "0.0.0"
+description = "Canonical scene, geometry, and design workflows for ArchAI Studio"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.34,<1",
+  "pydantic>=2.11,<3",
+  "python-multipart>=0.0.20",
+  "shapely>=2.1,<3",
+  "ortools>=9.12,<10",
+  "langgraph>=1,<2",
+  "langchain-ollama>=1,<2",
+  "opencv-python-headless>=4.11,<5",
+  "httpx>=0.28,<1",
+  "pillow>=11,<13",
+  "pymupdf>=1.26,<2",
+  "python-dotenv>=1,<2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
