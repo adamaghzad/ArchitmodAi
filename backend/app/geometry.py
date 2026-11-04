@@ -5,6 +5,7 @@ from shapely import affinity
 from shapely.geometry import LineString, Point, Polygon, box
 from shapely.ops import unary_union
 
+from .access import access_issues, approach_zones, circulation_clear
 from .catalog import CATALOG, total_cost
 from .materials import material_cost, material_selection
 from .models import Furniture, Issue, Scene, ValidationReport
@@ -59,7 +60,9 @@ def placement_clear(
         if occupied is not None
         else [footprint(other).buffer(0.08) for other in scene.furniture if other.id != item.id]
     )
-    doors = clearances if clearances is not None else door_clearances(scene)
+    doors = (
+        clearances if clearances is not None else [*door_clearances(scene), *approach_zones(scene)]
+    )
     walls = (
         wall_bodies
         if wall_bodies is not None
@@ -68,11 +71,20 @@ def placement_clear(
             for wall in scene.walls
         ]
     )
-    return (
+    clear = (
         not any(shape.intersects(other) for other in shapes)
         and not any(shape.intersection(zone).area > 0.001 for _, zone in doors)
         and not any(shape.intersection(body).area > 0.001 for body in walls)
     )
+    if not clear:
+        return False
+    footprints = {
+        other.id: footprint(other)
+        for other in scene.furniture
+        if other.id != item.id and other.product_id in CATALOG
+    }
+    footprints[item.id] = shape
+    return circulation_clear(scene, item.room_id, footprints)
 
 
 def validate_scene(scene: Scene) -> ValidationReport:
@@ -100,6 +112,14 @@ def validate_scene(scene: Scene) -> ValidationReport:
     for wall in scene.walls:
         if not boundary.buffer(0.001).covers(LineString([wall.start, wall.end])):
             error("wall_outside", "Wall endpoints must stay inside the footprint.", wall.id)
+    for a, b in combinations(scene.walls, 2):
+        if LineString([a.start, a.end]).intersection(LineString([b.start, b.end])).length > 0.001:
+            error(
+                "wall_overlap",
+                "Wall centre lines overlap. Merge duplicate wall segments.",
+                a.id,
+                [b.id],
+            )
     for room in scene.rooms:
         polygon = rooms[room.id]
         if room.id not in valid_rooms:
@@ -130,7 +150,7 @@ def validate_scene(scene: Scene) -> ValidationReport:
             error("opening_overlap", "Openings on the same wall overlap.", a.id)
     shapes = {}
     for item in scene.furniture:
-        if item.product_id not in CATALOG:
+        if item.product_id not in CATALOG or CATALOG[item.product_id].kind != "furniture":
             error("unknown_product", "Furniture must refer to a known catalogue product.", item.id)
             continue
         shape = footprint(item)
@@ -161,6 +181,7 @@ def validate_scene(scene: Scene) -> ValidationReport:
                     [wall.id],
                 )
     known_items = [item for item in scene.furniture if item.product_id in CATALOG]
+    issues.extend(access_issues(scene, shapes))
     furniture_total = total_cost(known_items)
     for selection in scene.materials:
         product = CATALOG.get(selection.product_id)
@@ -199,7 +220,7 @@ def validate_scene(scene: Scene) -> ValidationReport:
             Issue(
                 code="concept_only",
                 severity="warning",
-                message="Concept geometry only. Circulation, services, and building rules are unverified.",
+                message="Access is checked under configurable design assumptions. Services and building regulations are not evaluated.",
             ),
             Issue(
                 code="sample_catalogue",
