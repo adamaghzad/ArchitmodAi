@@ -343,45 +343,56 @@ export default function PlanView({
         );
       })}
       {showFurniture &&
-        scene.furniture.map((stored) => {
-          const item = draft?.id === stored.id ? draft : stored;
-          const product = products.find(
-            (product) => product.id === item.product_id,
-          );
-          if (!product) return null;
-          return (
-            <g
-              key={item.id}
-              transform={`translate(${item.position.join(' ')}) rotate(${item.rotation_deg})`}
-              className="furniture-shape"
-              role="button"
-              tabIndex={0}
-              aria-label={`Select ${product.name}`}
-              onPointerDown={(event) => beginObject(event, item, product)}
-              onClick={() => {
-                if (tool !== 'measure' && tool !== 'pan') onSelect(item.id);
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  onSelect(item.id);
-                }
-              }}
-            >
-              <FurnitureSymbol product={product} />
-              {selected === item.id && (
-                <rect
-                  x="-0.045"
-                  y="-0.045"
-                  width={product.width_m + 0.09}
-                  height={product.depth_m + 0.09}
-                  rx=".035"
-                  className="furniture-selection"
-                />
-              )}
-            </g>
-          );
-        })}
+        [...scene.furniture]
+          .sort((a, b) => {
+            const rank = (item: Furniture) =>
+              item.support_id
+                ? 2
+                : products.find((product) => product.id === item.product_id)
+                      ?.category === 'rug'
+                  ? 0
+                  : 1;
+            return rank(a) - rank(b);
+          })
+          .map((stored) => {
+            const item = draft?.id === stored.id ? draft : stored;
+            const product = products.find(
+              (product) => product.id === item.product_id,
+            );
+            if (!product) return null;
+            return (
+              <g
+                key={item.id}
+                transform={`translate(${item.position.join(' ')}) rotate(${item.rotation_deg})`}
+                className="furniture-shape"
+                role="button"
+                tabIndex={0}
+                aria-label={`Select ${product.name}`}
+                onPointerDown={(event) => beginObject(event, item, product)}
+                onClick={() => {
+                  if (tool !== 'measure' && tool !== 'pan') onSelect(item.id);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onSelect(item.id);
+                  }
+                }}
+              >
+                <FurnitureSymbol product={product} />
+                {selected === item.id && (
+                  <rect
+                    x="-0.045"
+                    y="-0.045"
+                    width={product.width_m + 0.09}
+                    height={product.depth_m + 0.09}
+                    rx=".035"
+                    className="furniture-selection"
+                  />
+                )}
+              </g>
+            );
+          })}
       <g className="room-annotations" pointerEvents="none">
         {scene.rooms.map((room) => {
           const [x, y] = centre(room.polygon);

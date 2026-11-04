@@ -1026,3 +1026,19 @@
   bottom: auto;
   left: 16px;
 }
+.completeness-panel {
+  padding: 14px 18px;
+  margin-top: 14px;
+  border: 1px solid var(--border, #394b38);
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.completeness-panel summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.completeness-panel .missing-reason {
+  display: block;
+  color: #edbc97;
+}

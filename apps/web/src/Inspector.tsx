@@ -7,6 +7,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { area, money } from './geometry';
+import CompletenessPanel from './CompletenessPanel';
+import type { RenderAuditEntry } from './types';
 import { wallAtRoom } from './sceneGeometry';
 import {
   RoomDetails,
@@ -17,6 +19,7 @@ import {
 import type { Operation, Product, Project, Scene } from './types';
 
 interface Props {
+  renderAudit?: RenderAuditEntry[];
   project: Project;
   scene: Scene | null;
   products: Product[];
@@ -205,7 +208,7 @@ function ObjectProperties({
                 X (m)
                 <input
                   type="number"
-                  step="0.1"
+                  step="any"
                   min="-100"
                   max="100"
                   value={x}
@@ -217,7 +220,7 @@ function ObjectProperties({
                 Y (m)
                 <input
                   type="number"
-                  step="0.1"
+                  step="any"
                   min="-100"
                   max="100"
                   value={y}
@@ -450,6 +453,7 @@ function ObjectProperties({
 }
 
 export default function Inspector({
+  renderAudit = [],
   project,
   scene,
   products,
@@ -518,6 +522,10 @@ export default function Inspector({
             )}
           </div>
         )}
+        <CompletenessPanel
+          report={project.report?.completeness}
+          audit={renderAudit}
+        />
         {tab === 'properties' && (
           <>
             {project.reference && !scene ? (

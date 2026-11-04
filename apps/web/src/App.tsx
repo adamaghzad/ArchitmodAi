@@ -34,7 +34,7 @@ import { area } from './geometry';
 import Inspector from './Inspector';
 import PlanView from './PlanView';
 import ProjectDialog, { type ProjectInput } from './ProjectDialog';
-import type { Operation, Product, Project } from './types';
+import type { Operation, Product, Project, RenderAuditEntry } from './types';
 import Marketplace from './Marketplace';
 import WorkspaceToolbar from './WorkspaceToolbar';
 import WorkspacePanel from './WorkspacePanel';
@@ -78,6 +78,7 @@ export default function App() {
   const [tool, setTool] = useState<EditorTool>('select');
   const [fitToken, setFitToken] = useState(0);
   const [aiPreview, setAiPreview] = useState(false);
+  const [renderAudit, setRenderAudit] = useState<RenderAuditEntry[]>([]);
   const [settings, setSettings] = useState<ViewSettings>(() => {
     try {
       const saved = JSON.parse(
@@ -207,6 +208,7 @@ export default function App() {
           void _page;
           next = await post<Project>(`/projects/${created.id}/generate-plan`, {
             ...request,
+            furnish: Boolean(request.prompt.trim()),
             expected_revision: created.revision,
           });
         } else {
@@ -745,6 +747,7 @@ export default function App() {
                         tool={tool}
                         busy={busy}
                         settings={settings}
+                        onAudit={setRenderAudit}
                       />
                     </Suspense>
                   )}
@@ -997,6 +1000,7 @@ export default function App() {
           </section>
           {project && (
             <Inspector
+              renderAudit={view === '3d' ? renderAudit : []}
               key={project.id}
               project={project}
               scene={scene}

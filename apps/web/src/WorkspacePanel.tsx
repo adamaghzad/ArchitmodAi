@@ -8,6 +8,7 @@ import {
   X,
 } from 'lucide-react';
 import { api } from './api';
+import StyleSelect from './StyleSelect';
 import type { Project, Scene } from './types';
 import type { ViewSettings } from './editorTypes';
 
@@ -200,14 +201,7 @@ export default function WorkspacePanel({
                   </label>
                   <label>
                     Interior style
-                    <select
-                      value={style}
-                      onChange={(event) => setStyle(event.target.value)}
-                    >
-                      <option>Warm minimal</option>
-                      <option>Scandinavian</option>
-                      <option>Contemporary</option>
-                    </select>
+                    <StyleSelect value={style} onChange={setStyle} />
                   </label>
                 </div>
                 <dl className="property-list">

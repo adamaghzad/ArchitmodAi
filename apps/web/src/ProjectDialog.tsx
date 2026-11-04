@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, FileUp, Plus, Sparkles, Trash2, X } from 'lucide-react';
 import type { RoomRequirement } from './types';
+import StyleSelect from './StyleSelect';
 
 export interface ProjectInput {
   name: string;
@@ -238,16 +239,10 @@ export default function ProjectDialog({
               <div className="form-row">
                 <label>
                   Interior style
-                  <select
+                  <StyleSelect
                     value={input.style}
-                    onChange={(event) =>
-                      setInput({ ...input, style: event.target.value })
-                    }
-                  >
-                    <option>Warm minimal</option>
-                    <option>Scandinavian</option>
-                    <option>Contemporary</option>
-                  </select>
+                    onChange={(style) => setInput({ ...input, style })}
+                  />
                 </label>
                 <label>
                   Budget (MAD)
@@ -267,11 +262,11 @@ export default function ProjectDialog({
                 </label>
               </div>
               <details className="brief-details">
-                <summary>Interpret a text brief with Qwen</summary>
+                <summary>Furniture, palette and text brief</summary>
                 <p className="hint">
                   {modelConfigured
-                    ? 'Qwen extracts requirements and proposes a room order; the solver calculates the layout. Style guides catalogue ranking.'
-                    : 'Set OLLAMA_REQUIREMENTS_MODEL in backend/.env to enable text interpretation. You can generate from the room list now.'}
+                    ? 'A brief generates furniture and finishes as well as the layout. Qwen can interpret the full brief; catalogue and geometry checks remain deterministic.'
+                    : 'Enter furniture quantities and palette with the room list. Configure Ollama to also interpret room requirements with Qwen.'}
                 </p>
                 <label className="checkbox-label">
                   <input
@@ -287,7 +282,6 @@ export default function ProjectDialog({
                 <textarea
                   aria-label="Design brief"
                   placeholder="A living room, two bedrooms, a kitchen, and a bathroom…"
-                  disabled={!input.use_model}
                   required={input.use_model}
                   maxLength={2000}
                   value={input.prompt}
@@ -351,7 +345,9 @@ export default function ProjectDialog({
             {busy
               ? 'Working…'
               : input.mode === 'generate'
-                ? 'Generate layout'
+                ? input.prompt.trim()
+                  ? 'Generate design'
+                  : 'Generate layout'
                 : 'Import reference'}
             <ArrowRight size={16} />
           </button>
