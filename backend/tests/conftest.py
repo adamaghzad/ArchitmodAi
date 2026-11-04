@@ -8,6 +8,7 @@ from app.models import GenerateRequest, RoomRequirement
 @pytest.fixture(autouse=True)
 def isolated_inference(monkeypatch):
     monkeypatch.setenv("OLLAMA_REQUIREMENTS_MODEL", "")
+    monkeypatch.setenv("ARCHAI_EMBEDDINGS_ENABLED", "false")
 
 
 @pytest.fixture

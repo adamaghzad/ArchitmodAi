@@ -7,8 +7,10 @@ from shapely.ops import unary_union
 
 from .access import access_issues, approach_zones, circulation_clear
 from .catalog import CATALOG, total_cost
+from .completeness import completeness_report
 from .materials import material_cost, material_selection
 from .models import Furniture, Issue, Scene, ValidationReport
+from .spatial import floor_obstacle, vertical_overlap
 
 
 def footprint(item: Furniture):
@@ -58,7 +60,14 @@ def placement_clear(
     shapes = (
         occupied
         if occupied is not None
-        else [footprint(other).buffer(0.08) for other in scene.furniture if other.id != item.id]
+        else [
+            footprint(other).buffer(0.06)
+            for other in scene.furniture
+            if other.id != item.id
+            and other.support_id != item.id
+            and other.product_id in CATALOG
+            and vertical_overlap(item, other)
+        ]
     )
     doors = (
         clearances if clearances is not None else [*door_clearances(scene), *approach_zones(scene)]
@@ -81,9 +90,10 @@ def placement_clear(
     footprints = {
         other.id: footprint(other)
         for other in scene.furniture
-        if other.id != item.id and other.product_id in CATALOG
+        if other.id != item.id and floor_obstacle(other)
     }
-    footprints[item.id] = shape
+    if floor_obstacle(item):
+        footprints[item.id] = shape
     return circulation_clear(scene, item.room_id, footprints)
 
 
@@ -155,11 +165,38 @@ def validate_scene(scene: Scene) -> ValidationReport:
             continue
         shape = footprint(item)
         shapes[item.id] = shape
+        if item.support_id:
+            support = next(
+                (other for other in scene.furniture if other.id == item.support_id), None
+            )
+            support_product = CATALOG.get(support.product_id) if support else None
+            if not (
+                support
+                and support_product
+                and support.support_id is None
+                and support_product.category in {"table", "desk", "dressing_table"}
+                and CATALOG[item.product_id].category == "lighting"
+                and item.room_id == support.room_id
+                and abs(item.elevation_m - support_product.height_m) < 0.001
+                and footprint(support).buffer(0.001).covers(shape)
+            ):
+                error(
+                    "invalid_support",
+                    "Supported lamps must rest on a matching tabletop inside its footprint.",
+                    item.id,
+                )
+        elif item.elevation_m > 0.001:
+            error(
+                "unsupported_elevation",
+                "Elevated furniture requires a valid support object.",
+                item.id,
+            )
         room = valid_rooms.get(item.room_id)
         if room is None or not room.buffer(0.001).covers(shape):
             error("furniture_outside", "Furniture must stay inside its assigned room.", item.id)
+    items = {item.id: item for item in scene.furniture}
     for (a_id, a), (b_id, b) in combinations(shapes.items(), 2):
-        if a.intersection(b).area > 0.001:
+        if vertical_overlap(items[a_id], items[b_id]) and a.intersection(b).area > 0.001:
             error("furniture_overlap", f"Furniture {a_id} and {b_id} overlap.", a_id, [b_id])
     for opening_id, zone in door_clearances(scene):
         for item_id, shape in shapes.items():
@@ -181,7 +218,16 @@ def validate_scene(scene: Scene) -> ValidationReport:
                     [wall.id],
                 )
     known_items = [item for item in scene.furniture if item.product_id in CATALOG]
-    issues.extend(access_issues(scene, shapes))
+    issues.extend(
+        access_issues(
+            scene,
+            {
+                item.id: shapes[item.id]
+                for item in scene.furniture
+                if floor_obstacle(item) and item.id in shapes
+            },
+        )
+    )
     furniture_total = total_cost(known_items)
     for selection in scene.materials:
         product = CATALOG.get(selection.product_id)
@@ -229,10 +275,12 @@ def validate_scene(scene: Scene) -> ValidationReport:
             ),
         ]
     )
-    return ValidationReport(
+    report = ValidationReport(
         valid=not any(issue.severity == "error" for issue in issues),
         issues=issues,
         total_mad=total,
         furniture_total_mad=furniture_total,
         materials_total_mad=materials_total,
     )
+    report.completeness = completeness_report(scene, report)
+    return report

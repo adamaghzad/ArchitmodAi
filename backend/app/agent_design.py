@@ -6,7 +6,8 @@ from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 from shapely.geometry import LineString, Polygon
 
-from .catalog import CATALOG, PRODUCTS, fits
+from .catalog import CATALOG
+from .design_knowledge import attach_profile, get_profile
 from .geometry import validate_scene
 from .inference import InferenceError, structured
 from .models import (
@@ -20,6 +21,7 @@ from .models import (
 )
 from .operations import apply_operations
 from .repair import repair_candidate
+from .style_ranking import rank_products, semantic_scores
 
 
 class InstructionState(TypedDict, total=False):
@@ -48,6 +50,14 @@ def interpret(state: InstructionState):
                 "instruction": request.instruction,
                 "scope_room_id": request.room_id,
                 "scope_object_id": request.object_id,
+                "style_profile": get_profile(scene.style).context(
+                    next(
+                        (room.type for room in scene.rooms if room.id == request.room_id),
+                        scene.rooms[0].type,
+                    )
+                )
+                if get_profile(scene.style)
+                else None,
                 "scene": scene.model_dump(),
             }
         ),
@@ -81,20 +91,31 @@ def interpret(state: InstructionState):
 
 def retrieve(state: InstructionState):
     scene, intent = state["scene"], state["intent"]
+    staged = scene.model_copy(deep=True)
+    if intent.style:
+        staged.style = intent.style
+    if intent.budget_mad is not None:
+        staged.budget_mad = intent.budget_mad
+    staged.furniture = [
+        item
+        for item in staged.furniture
+        if not (
+            intent.action == "replace_room_furniture"
+            and item.room_id in intent.room_ids
+            or intent.action == "replace_furniture"
+            and item.id in intent.object_ids
+        )
+    ]
+    if intent.action == "change_material":
+        staged.materials = [
+            item for item in staged.materials if item.room_id not in intent.room_ids
+        ]
     pools = {}
     for room in scene.rooms:
         if room.id not in intent.room_ids:
             continue
-        bounds = Polygon(room.polygon).bounds
-        pools[room.id] = [
-            product.id
-            for product in PRODUCTS
-            if room.type in product.room_types
-            and (not intent.style or product.design_style == intent.style)
-            and fits(product, bounds[2] - bounds[0], bounds[3] - bounds[1])
-            and product.price_mad
-            <= (intent.budget_mad if intent.budget_mad is not None else scene.budget_mad)
-        ]
+        scores, _ = semantic_scores(staged, room, True)
+        pools[room.id] = [row["product_id"] for row in rank_products(staged, room, semantic=scores)]
     return {"products": pools}
 
 
@@ -141,6 +162,7 @@ def propose(state: InstructionState):
         candidate.budget_mad = intent.budget_mad
     if intent.style:
         candidate.style = intent.style
+        attach_profile(candidate)
     operations = []
     explanations = [intent.explanation]
     if intent.action == "edit_objects":
@@ -209,6 +231,9 @@ def propose(state: InstructionState):
                         {
                             "instruction": state["request"].instruction,
                             "room": room.model_dump(),
+                            "style_profile": get_profile(candidate.style).context(room.type)
+                            if get_profile(candidate.style)
+                            else None,
                             "available_budget_mad": remaining,
                             "replace_id": target.id if target else None,
                             "existing_furniture": [

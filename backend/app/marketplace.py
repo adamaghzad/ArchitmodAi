@@ -7,17 +7,42 @@ from .catalog import CATALOG, Product, fits, search_products
 from .geometry import door_clearances, footprint, placement_clear, validate_scene
 from .materials import material_selection
 from .models import AddProductRequest, Furniture, Scene
+from .spatial import floor_obstacle, recenter_supports
 
 
 def position_for(scene: Scene, product: Product, room_id: str) -> Furniture | None:
     room = next((room for room in scene.rooms if room.id == room_id), None)
     if room is None or product.kind != "furniture":
         return None
+    if product.category == "lighting" and product.height_m < 0.8:
+        for support in scene.furniture:
+            parent = CATALOG[support.product_id]
+            if support.room_id != room_id or parent.category not in {"table", "desk"}:
+                continue
+            bounds = footprint(support).bounds
+            item = Furniture(
+                id=f"furniture_{uuid4().hex[:12]}",
+                product_id=product.id,
+                room_id=room_id,
+                position=(
+                    (bounds[0] + bounds[2] - product.width_m) / 2,
+                    (bounds[1] + bounds[3] - product.depth_m) / 2,
+                ),
+                support_id=support.id,
+                elevation_m=parent.height_m,
+            )
+            if placement_clear(scene, item):
+                return item
+        return None
     polygon = Polygon(room.polygon).buffer(-0.2)
     if polygon.is_empty:
         return None
     min_x, min_y, max_x, max_y = polygon.bounds
-    occupied = [footprint(old).buffer(0.1) for old in scene.furniture]
+    occupied = (
+        [footprint(old).buffer(0.06) for old in scene.furniture if floor_obstacle(old)]
+        if product.category != "rug"
+        else []
+    )
     clearances = [*door_clearances(scene), *approach_zones(scene)]
     region = polygon.buffer(0.0001)
     wall_bodies = [
@@ -90,7 +115,10 @@ def add_product(scene: Scene, request: AddProductRequest) -> Scene:
             )
         if isinstance(existing, Furniture):
             item.id = existing.id
+            item.requirement_id = existing.requirement_id
+            item.fabric_color, item.wood_color = existing.fabric_color, existing.wood_color
         candidate.furniture.append(item)
+        recenter_supports(candidate, item)
     else:
         selection = material_selection(
             candidate, product, room.id, request.surface, request.waste_fraction

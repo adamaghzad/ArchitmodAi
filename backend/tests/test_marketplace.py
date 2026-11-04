@@ -12,9 +12,10 @@ from app.models import AddProductRequest
 from app.planner import solve_layout
 
 
-def test_catalogue_contains_fifty_honest_mock_records():
-    assert len(PRODUCTS) == 52
-    assert len(CATALOG) == 52
+def test_catalogue_contains_honest_mock_records_and_bedroom_additions():
+    assert len(PRODUCTS) == 56
+    assert len(CATALOG) == 56
+    assert {"pastel_double_bed", "dressing_vanity", "potted_plant"} <= CATALOG.keys()
     assert any(product.kind == "material" for product in PRODUCTS)
     assert all(
         product.mock_data

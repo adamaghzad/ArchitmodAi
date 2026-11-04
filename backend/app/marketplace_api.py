@@ -14,11 +14,13 @@ from .geometry import validate_scene
 from .marketplace import add_product, compare_products, shopping_list
 from .models import (
     AddProductRequest,
+    AgentOperation,
     RecommendRequest,
     RemoveProductRequest,
     RevisionRequest,
     SuggestionDecision,
 )
+from .operations import apply_operations
 from .recommendations import recommendation_workflow
 from .repair import repair_candidate
 from .store import ConflictError, ProjectStore
@@ -119,7 +121,10 @@ def marketplace_router(store: ProjectStore, assets):
         project, scene = load(project_id, request.expected_revision)
         if not any(item.id == request.object_id for item in [*scene.furniture, *scene.materials]):
             raise HTTPException(404, "Selected item not found.")
-        scene.furniture = [item for item in scene.furniture if item.id != request.object_id]
+        if any(item.id == request.object_id for item in scene.furniture):
+            scene = apply_operations(
+                scene, [AgentOperation(type="remove_furniture", object_id=request.object_id)]
+            )
         scene.materials = [item for item in scene.materials if item.id != request.object_id]
         project.candidate_scene = scene
         project.report = validate_scene(scene)

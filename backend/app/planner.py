@@ -1,11 +1,15 @@
 import json
 import math
+import re
 
 from ortools.sat.python import cp_model
 from shapely.geometry import LineString, Polygon
 from shapely.ops import unary_union
 
+from .completeness import trace
+from .design_knowledge import attach_profile, chosen_style, get_profile
 from .inference import InferenceError, structured
+from .interior_brief import interior_brief
 from .models import Brief, GenerateRequest, LayoutOrder, Opening, Room, RoomRequirement, Scene, Wall
 
 ROOM_COLORS = {
@@ -122,7 +126,61 @@ def add_openings(scene: Scene):
 
 
 def solve_layout(request: GenerateRequest, project_id: str) -> Scene:
-    requirements = interpret_brief(request.prompt) if request.use_model else request.rooms
+    style = chosen_style(request.style, request.prompt)
+    profile = get_profile(style)
+    extracted = None
+    inferred_finishes = []
+    if request.use_model:
+        extracted = structured(
+            "requirements",
+            Brief,
+            "Extract every room and minimum area, every requested furniture type with exact quantities and essential/desired priorities, palette and materials. Furniture entries need a room_type, role (bed, bedside_table, vanity, mirror, wardrobe, armchair, bookshelf, rug, lamp, plant, or the user's unsupported name), name and quantity. Never drop an unsupported request. A mirror may be integral to a vanity. Do not generate coordinates.",
+            json.dumps(
+                {
+                    "user_prompt": request.prompt,
+                    "chosen_style": style,
+                    "style_profile": profile.model_dump(
+                        include={
+                            "id",
+                            "name",
+                            "palette",
+                            "preferred_materials",
+                            "design_characteristics",
+                        }
+                    )
+                    if profile
+                    else None,
+                    "rule": "Extract explicit user needs only; template suggestions are applied separately and never override the user.",
+                }
+            ),
+        )
+        if profile:
+            # Models sometimes echo the supplied profile as if the user had
+            # demanded each finish. Keep those in the preference layer unless
+            # the original prompt actually mentions them.
+            inferred_terms = {color.name.lower() for color in profile.palette} | set(
+                profile.preferred_materials
+            )
+
+            def explicit_or_unrelated(value):
+                term = value.lower().strip()
+                keep = term not in inferred_terms or bool(
+                    re.search(r"\b" + re.escape(term) + r"\b", request.prompt.lower())
+                )
+                if not keep:
+                    inferred_finishes.append(value)
+                return keep
+
+            extracted.palette = [
+                value for value in extracted.palette if explicit_or_unrelated(value)
+            ]
+            extracted.materials = [
+                value for value in extracted.materials if explicit_or_unrelated(value)
+            ]
+    requirements = extracted.rooms if extracted else request.rooms
+    furnishing_brief = interior_brief(
+        request.prompt, extracted, [room.type for room in requirements]
+    )
     if request.use_model:
         ordering = structured(
             "design",
@@ -222,7 +280,8 @@ def solve_layout(request: GenerateRequest, project_id: str) -> Scene:
         rooms=rooms,
         walls=build_walls(rooms, width / 10, depth / 10),
         budget_mad=request.budget_mad,
-        style=request.style,
+        style=style,
+        design_brief=furnishing_brief,
         notes=[
             "Rectangular layout on a 0.1 m grid. Areas use wall centre lines; collision checks include actual wall thickness.",
             "Shared-wall doors connect rooms to an exterior entrance. Circulation uses declared design assumptions, not legal building rules.",
@@ -231,5 +290,15 @@ def solve_layout(request: GenerateRequest, project_id: str) -> Scene:
             else "Generated from the explicit room list.",
         ],
     )
+    attach_profile(scene)
+    if inferred_finishes:
+        trace(
+            scene,
+            "requirements",
+            status="profile_preferences",
+            profile_id=profile.id,
+            finishes=list(dict.fromkeys(inferred_finishes)),
+            reason="Profile-derived finishes unmentioned in the original prompt remain soft preferences, not explicit user demands.",
+        )
     add_openings(scene)
     return scene

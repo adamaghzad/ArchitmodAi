@@ -3,9 +3,11 @@
 from uuid import uuid4
 
 from .catalog import CATALOG
+from .completeness import trace
 from .marketplace import add_product
 from .materials import refresh_quantities
 from .models import AddProductRequest, AgentOperation, Furniture, Scene
+from .spatial import move_supports
 
 
 def apply_operations(scene: Scene, operations: list[AgentOperation]) -> Scene:
@@ -62,11 +64,27 @@ def apply_operations(scene: Scene, operations: list[AgentOperation]) -> Scene:
                     ),
                 )
         elif operation.type == "move_furniture" and item and operation.position is not None:
+            old_position, old_rotation = item.position, item.rotation_deg
             item.position = operation.position
             if operation.rotation_deg is not None:
                 item.rotation_deg = operation.rotation_deg
+            move_supports(candidate, item, old_position, old_rotation)
         elif operation.type in ("delete_furniture", "remove_furniture") and item:
-            candidate.furniture = [other for other in candidate.furniture if other.id != item.id]
+            children = [other for other in candidate.furniture if other.support_id == item.id]
+            for child in children:
+                trace(
+                    candidate,
+                    "placement",
+                    requirement_id=child.requirement_id,
+                    object_id=child.id,
+                    status="missing",
+                    reason="Mounted lamp removed with its deleted support table.",
+                )
+            candidate.furniture = [
+                other
+                for other in candidate.furniture
+                if other.id != item.id and other.support_id != item.id
+            ]
         elif operation.type == "update_wall" and wall:
             fields = ("start", "end", "height", "thickness")
             if not any(getattr(operation, field) is not None for field in fields):

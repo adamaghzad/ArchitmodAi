@@ -6,11 +6,13 @@ from langgraph.graph import END, START, StateGraph
 from shapely.geometry import Polygon
 
 from .catalog import CATALOG, Product, search_products
+from .design_knowledge import get_profile
 from .geometry import validate_scene
 from .inference import InferenceError, structured
 from .marketplace import position_for
 from .materials import material_selection
 from .models import ProductAdvice, Recommendation, Scene
+from .style_ranking import rank_products, semantic_scores
 
 
 class RecommendationState(TypedDict):
@@ -35,7 +37,13 @@ def recommendations_for(state: RecommendationState, kind: str):
             width=x1 - x0 - 0.4,
             depth=y1 - y0 - 0.4,
         )
-        pool.sort(key=lambda product: (product.design_style != scene.style, product.price_mad))
+        semantic, retrieval = semantic_scores(scene, room, state["use_ai"])
+        ranked = rank_products(scene, room, pool, semantic)
+        order = {row["product_id"]: i for i, row in enumerate(ranked)}
+        pool = sorted(
+            [product for product in pool if product.id in order],
+            key=lambda product: order[product.id],
+        )
         eligible: list[Product] = []
         for product in pool:
             if kind == "furniture":
@@ -60,6 +68,10 @@ def recommendations_for(state: RecommendationState, kind: str):
                     {
                         "room": room.model_dump(),
                         "style": scene.style,
+                        "style_profile": get_profile(scene.style).context(room.type)
+                        if get_profile(scene.style)
+                        else None,
+                        "semantic_retrieval": retrieval,
                         "remaining_budget_mad": remaining,
                         "candidates": [product.model_dump() for product in eligible],
                     }

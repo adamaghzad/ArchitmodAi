@@ -12,6 +12,7 @@ from PIL import Image, UnidentifiedImageError
 
 from .agent_design import instruction_workflow
 from .catalog import catalogue_records
+from .design_knowledge import attach_profile, profiles
 from .geometry import validate_scene
 from .inference import InferenceError
 from .marketplace_api import marketplace_router
@@ -94,6 +95,10 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def catalogue():
         return catalogue_records()
 
+    @app.get("/api/design-styles")
+    def design_styles():
+        return [profile.model_dump() for profile in profiles()]
+
     @app.get("/api/projects", response_model=list[Project])
     def projects():
         result = store.list()
@@ -117,8 +122,18 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def generate_plan(project_id: str, request: GenerateRequest):
         project = current(project_id, request.expected_revision)
         scene = solve_layout(request, project_id)
+        if request.furnish:
+            scene = design_workflow.invoke(
+                {
+                    "scene": scene,
+                    "report": validate_scene(scene),
+                    "use_ai": request.use_model,
+                    "use_semantic": request.use_semantic,
+                }
+            )["scene"]
         project.candidate_scene = scene
         project.recommendations = []
+        project.agent_proposal = None
         project.report = validate_scene(scene)
         return store.save(project, request.expected_revision)
 
@@ -130,10 +145,16 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         if not report.valid:
             raise HTTPException(422, "Resolve geometry and scale errors before furnishing.")
         result = design_workflow.invoke(
-            {"scene": scene, "report": report, "use_ai": request.use_ai}
+            {
+                "scene": scene,
+                "report": report,
+                "use_ai": request.use_ai,
+                "use_semantic": request.use_semantic,
+            }
         )
         project.candidate_scene = result["scene"]
         project.report = result["report"]
+        project.agent_proposal = None
         return store.save(project, request.expected_revision)
 
     @app.post("/api/projects/{project_id}/operations", response_model=Project)
@@ -195,6 +216,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         project = current(project_id, request.expected_revision)
         scene = scene_for(project)
         scene.budget_mad, scene.style = request.budget_mad, request.style
+        attach_profile(scene)
         if request.design_assumptions is not None:
             scene.design_assumptions = request.design_assumptions
         project.agent_proposal = None
