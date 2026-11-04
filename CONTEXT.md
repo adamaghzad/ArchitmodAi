@@ -1,6 +1,6 @@
 # Project context
 
-Last updated: 2026-11-03.
+Last updated: 2026-11-04.
 
 ## Source and current state
 
@@ -34,9 +34,19 @@ These are source-brief statements, not claims of implemented functionality or an
 - The marketplace scope is confirmed: discovery/filtering/sorting, correctly scaled scene placement, comparisons/replacements, furniture/material recommendations with accept/reject, budget and material quantities, project shopping lists, and PDF/CSV export. Commerce operations are excluded; see DEVELOPMENT_RULES.md.
 - The local catalogue contains 52 explicitly labelled mock JSON records, including toilet and shower fixtures added for the workspace upgrade. Existing product IDs are preserved; there are no fabricated commercial URLs. Provider and segmentation interfaces are available for future authorized feeds and locally trained models.
 - The user subsequently requested a professional workspace and realistic rendering upgrade using two supplied visual references. The brief and acceptance are recorded in [docs/WORKSPACE_UPGRADE.md](docs/WORKSPACE_UPGRADE.md). Preserve the existing React/Three/FastAPI/LangGraph architecture and canonical geometry.
-- The user has no prepared GLB/glTF or texture assets. Detailed procedural furniture and optional local assets are authorized. The implementation includes cached procedural PBR materials, a central licensed-asset registry, lazy GLB loading and automatic procedural fallback. No external asset library or model was downloaded. Asset appearance must never override stored dimensions, placement or collision checks.
+- At the preceding workspace upgrade, the user had no prepared GLB/glTF or texture assets. That upgrade added procedural PBR materials and an optional licensed loader. The subsequent licensed rendering milestone includes individually selected assets as described below. Asset appearance must never override stored dimensions, placement or collision checks.
 - The workspace now includes real navigation, contextual properties, SVG editing, camera presets, persisted draft undo/redo, approved snapshot restoration, synchronized material quantities and an optional local AI furnishing proposal. These additions retain candidate/approval isolation and optimistic revisions.
 - The user requested an initial Git history of exactly 81 descriptive commits and expanded README instructions for local setup and models. Inspection found 81 untracked project files and no existing commits on `main`; the initial history records one real file per commit. Personal configuration, local data, dependencies and generated artifacts remain ignored. No remote push was requested.
+
+## Licensed rendering milestone
+
+On 2026-11-04 the user requested a realistic renderer upgrade and approved the rendering acceptance checks. Their expanded brief specifies a 5 × 4 m modern Japandi home office, catalogue bounds, floor contact, clear doors and basic circulation, isometric and eye-level cameras, local licensed furniture/materials, optional progressive quality, progress/cancellation, screenshots and measured FPS. Approximately 60 FPS at 1080p and 30–60 FPS for larger scenes are targets. Unrelated LangGraph, marketplace and generation logic must remain unchanged; pre-existing uncommitted backend work is preserved.
+
+The implementation extends the existing Three.js/Fiber scene with eleven individually curated Innerscene CC0 GLBs and three Poly Haven CC0 PBR material sets plus a 1k HDRI. Downloaded assets total approximately 37.79 MiB; the [manifest](apps/web/public/assets/manifest.json) records authors, source/license evidence, attribution requirements and hashes. Existing catalogue records, dimensions and prices are unchanged. Uniformly fitted models remain generic visual proxies inside the stored envelopes, with proportion-preserving fit that can leave unused height/width. Bookshelf decorations belong to the same selected furniture object and remain inside its envelope.
+
+Interactive rendering uses cached meshes merged by material, metre-based material UVs, daylight, warm lamps and optional half-resolution contact detail through react-postprocessing. High quality lazy-loads the Three.js-compatible WebGL path tracer 0.0.24, uses the actual architectural geometry and camera, accumulates 256 samples and applies a light spatial denoise pass. Preparation, compilation and sample accumulation have distinct status messages; cancellation releases the tracer/worker. Scene edits return to Interactive. Newer path-tracer versions require a larger Three.js/WebGPU migration, so the compatible dependency is pinned.
+
+The acceptance fixture and isolated seed script are in `data/scenes/japandi-office.json` and `scripts/create_render_review.py`. The existing geometry service validates its door, walls, catalogue footprints and configured 0.6 m circulation assumptions. See [rendering documentation](docs/RENDERING.md) and HANDOFF for reproducible checks and results. No inference models or live LangGraph calls are used by rendering tests.
 
 ## Implementation boundaries
 
@@ -50,5 +60,7 @@ The PDF references example scene and operation files that are absent from this r
 
 ## Pending questions
 
-1. The user has not defined exhaustive feature acceptance criteria or a coverage threshold. Current tests cover the implemented behavior; they do not establish a final acceptance contract.
+On 2026-11-04 the user authorized recording all pending work in exactly 50 additional descriptive commits and pushing `main` to the configured GitHub `origin`. This supersedes the earlier local-only delivery authorization for this task. The previous 81-commit history remains intact; local settings, development/test data and installed dependencies remain excluded.
+
+1. Rendering milestone checks are approved. The user has not defined exhaustive acceptance or a coverage threshold for the broader research project; current tests do not establish that broader final contract.
 2. Trained segmentation weights, authorized catalogue feeds, and professional architecture constraints have not been supplied. Interfaces and explicit limitations preserve these boundaries.

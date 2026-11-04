@@ -51,6 +51,14 @@ The user supplied these requirements on 2026-11-03 while authorizing implementat
 
 On 2026-11-03 the user supplied the detailed upgrade brief summarized in [WORKSPACE_UPGRADE.md](docs/WORKSPACE_UPGRADE.md), with explicit acceptance criteria. Preserve the current architecture, scene contracts, data and APIs while improving the actual interactive renderers. Use the supplied forest-green references. Prefer lightweight procedural furniture/materials; optional local models require a reusable loader and central registry with source/license metadata. Do not stretch furniture to fit rooms, introduce disconnected scene objects, download large asset libraries, add paid APIs, or present unsupported controls as functional.
 
+## Licensed interior rendering
+
+On 2026-11-04 the user requested the rendering milestone in [RENDERING.md](docs/RENDERING.md) and approved checks for licensed loading/fallback, catalogue bounds, daylight materials, selection and 2D/3D synchronization, and a shared-camera high-quality mode. The final acceptance scene is a 5 × 4 m modern Japandi home office with walnut desk, ergonomic chair, bookshelf/books, upholstered reading chair, side table, rug, two windows, entrance door and warm secondary lighting. Preserve catalogue dimensions, floor contact, door clearance and basic circulation. Include isometric and eye-level cameras, loading progress/cancellation where supported, actual rendering screenshots and measured FPS with conditions. Approximately 60 FPS at 1080p and 30–60 FPS in complex rooms are targets, not guarantees. Use verified licenses and retain source, author and attribution metadata. Download only individual curated assets, never large collections automatically. Keep unrelated LangGraph workflows, marketplace behavior and project generation outside the change. Prioritize furniture/materials, lighting, then optional path tracing. Preserve pre-existing uncommitted backend work.
+
 ## Initial Git history
 
 On 2026-11-03 the user requested that all project changes be recorded in exactly 81 commits with professional, descriptive messages, together with README setup/model instructions. This count applies to the initial check-in task. Keep local settings, generated artifacts and installed dependencies ignored. This request authorizes local commits; it does not request a remote push.
+
+## Rendering delivery history
+
+On 2026-11-04 the user explicitly requested exactly 50 additional, professionally named commits and a remote push. This delivery includes all pending renderer, asset, test, documentation and pre-existing backend changes. Preserve the existing history and Git identity; use descriptive Conventional Commit messages, exclude local settings/data/dependencies, and push `main` to the configured `origin` without force.
