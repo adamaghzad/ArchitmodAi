@@ -48,7 +48,7 @@
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "licenseEvidence": "https://www.innerscene.com/tools/library/terms",
       "attributionRequired": false,
-      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product. Project-authored ceramic/book details remain inside the catalogue envelope.",
+      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product. Project-authored ceramic/book details remain inside the catalogue envelope. Optional per-instance palette tints clone PBR materials; source files and cached source materials stay unchanged.",
       "files": [
         {
           "path": "/assets/models/bookshelf.glb",
@@ -67,7 +67,7 @@
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "licenseEvidence": "https://www.innerscene.com/tools/library/terms",
       "attributionRequired": false,
-      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product.",
+      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product. Optional per-instance palette tints clone PBR materials; source files and cached source materials stay unchanged.",
       "files": [
         {
           "path": "/assets/models/reading-chair.glb",
@@ -124,7 +124,7 @@
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "licenseEvidence": "https://www.innerscene.com/tools/library/terms",
       "attributionRequired": false,
-      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product.",
+      "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit; generic visual proxy, not a merchant product. Optional per-instance palette tints clone PBR materials; source files and cached source materials stay unchanged.",
       "files": [
         {
           "path": "/assets/models/wardrobe.glb",

@@ -17,6 +17,8 @@ import type { MaterialAsset } from './assetRegistry';
 
 export type Finish =
   | 'floor'
+  | 'light-floor'
+  | 'light-wood'
   | 'wood'
   | 'fabric'
   | 'ceramic'
@@ -25,12 +27,15 @@ export type Finish =
   | 'plaster'
   | 'metal'
   | 'glass'
+  | 'mirror'
+  | 'sky'
   | 'light'
   | 'dark';
 
 function texture(kind: Finish): CanvasTexture | null {
-  if (kind === 'floor') kind = 'wood';
-  if (['glass', 'metal', 'light', 'dark'].includes(kind)) return null;
+  if (kind === 'floor' || kind === 'light-floor' || kind === 'light-wood')
+    kind = 'wood';
+  if (['glass', 'mirror', 'metal', 'light', 'dark'].includes(kind)) return null;
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 256;
   const context = canvas.getContext('2d')!;
@@ -41,7 +46,14 @@ function texture(kind: Finish): CanvasTexture | null {
   };
   context.fillStyle = '#ddddda';
   context.fillRect(0, 0, 256, 256);
-  if (kind === 'wood') {
+  if (kind === 'sky') {
+    const gradient = context.createLinearGradient(0, 0, 0, 256);
+    gradient.addColorStop(0, '#c8e0e9');
+    gradient.addColorStop(0.65, '#f3eee2');
+    gradient.addColorStop(1, '#bac9ae');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 256, 256);
+  } else if (kind === 'wood') {
     for (let plank = 0; plank < 4; plank++) {
       const shade = 190 + Math.floor(random() * 45);
       context.fillStyle = `rgb(${shade},${shade - 4},${shade - 10})`;
@@ -110,6 +122,15 @@ export class MaterialLibrary {
     private assets: MaterialAsset[] = [],
     private invalidate: () => void = () => {},
   ) {}
+  tinted(source: MeshStandardMaterial, color: string) {
+    const key = `tint:${source.uuid}:${color}`;
+    if (!this.materials.has(key)) {
+      const material = source.clone();
+      material.color.set(color);
+      this.materials.set(key, material);
+    }
+    return this.materials.get(key)!;
+  }
   get(kind: Finish, color: string) {
     const key = `${kind}:${color}`;
     const existing = this.materials.get(key);
@@ -137,16 +158,18 @@ export class MaterialLibrary {
             color,
             map,
             roughness:
-              kind === 'metal'
-                ? 0.28
-                : kind === 'ceramic'
-                  ? 0.32
-                  : kind === 'stone'
-                    ? 0.42
-                    : kind === 'wood'
-                      ? 0.68
-                      : 0.92,
-            metalness: kind === 'metal' ? 0.78 : 0,
+              kind === 'mirror'
+                ? 0.09
+                : kind === 'metal'
+                  ? 0.28
+                  : kind === 'ceramic'
+                    ? 0.32
+                    : kind === 'stone'
+                      ? 0.42
+                      : kind === 'wood'
+                        ? 0.68
+                        : 0.92,
+            metalness: kind === 'mirror' ? 1 : kind === 'metal' ? 0.78 : 0,
             bumpMap: kind === 'ceramic' ? null : this.bumps.get(kind) || null,
             bumpScale:
               kind === 'fabric' ? 0.001 : kind === 'wood' ? 0.002 : 0.0008,
@@ -157,16 +180,38 @@ export class MaterialLibrary {
       material.emissiveIntensity = 0.8;
       material.toneMapped = false;
     }
+    if (kind === 'sky') {
+      material.emissive = new Color('#f2ead9');
+      material.emissiveIntensity = 0.45;
+      material.emissiveMap = map;
+      material.bumpMap = null;
+    }
     this.materials.set(key, material);
-    const asset = this.assets.find((entry) => entry.finish === kind);
+    const asset = this.assets.find(
+      (entry) =>
+        entry.finish ===
+        (kind === 'light-floor'
+          ? 'floor'
+          : kind === 'light-wood'
+            ? 'wood'
+            : kind),
+    );
     if (asset) {
       // One set of image sources per finish, reused across colour variants.
-      this.loadPbr(asset, material);
+      this.loadPbr(
+        asset,
+        material,
+        kind === 'light-floor' || kind === 'light-wood',
+      );
     }
     return material;
   }
   private pbr = new Map<string, Promise<Texture[]>>();
-  private loadPbr(asset: MaterialAsset, material: MeshStandardMaterial) {
+  private loadPbr(
+    asset: MaterialAsset,
+    material: MeshStandardMaterial,
+    retainAlbedo = false,
+  ) {
     if (!this.pbr.has(asset.id)) {
       const loader = new TextureLoader();
       this.pbr.set(
@@ -198,7 +243,8 @@ export class MaterialLibrary {
         if (this.disposed) return;
         // Painted plaster uses the scan's microstructure, retaining the chosen
         // paint colour rather than baking the photographed grey stains into it.
-        material.map = asset.finish === 'plaster' ? null : map;
+        material.map =
+          asset.finish === 'plaster' ? null : retainAlbedo ? material.map : map;
         material.normalMap = normal;
         material.normalScale = new Vector2(
           asset.finish === 'plaster' ? 0.08 : 0.35,

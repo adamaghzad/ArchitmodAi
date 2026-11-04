@@ -198,7 +198,14 @@ function ArchitecturalOpening({
     h = Math.min(opening.height_m, cap - opening.sill_m),
     sill = opening.sill_m,
     frame = 0.045;
-  const metal = library.get('metal', selected ? '#a7c989' : '#677465');
+  const pastel =
+    scene.style === 'Pastel' ||
+    scene.style === 'Korean Pastel' ||
+    scene.design_brief?.profile_id === 'korean-pastel';
+  const metal = library.get(
+    pastel ? 'plaster' : 'metal',
+    selected ? '#a7c989' : pastel ? '#e8e2d4' : '#677465',
+  );
   if (h <= 0) return null;
   return (
     <group
@@ -233,6 +240,14 @@ function ArchitecturalOpening({
       </mesh>
       {opening.type === 'window' ? (
         <>
+          {pastel && (
+            <mesh
+              position={[w / 2, h / 2, 0.011]}
+              material={library.get('sky', '#ffffff')}
+            >
+              <planeGeometry args={[w - frame, h - frame]} />
+            </mesh>
+          )}
           <mesh position={[w / 2, 0, 0]} material={metal}>
             <boxGeometry args={[w + frame, frame, wall.thickness + 0.07]} />
           </mesh>
@@ -321,7 +336,14 @@ export default function Architecture({
                   ? '#b8b8ab'
                   : '#c6ad86')
             }
-            finish={finish === 'wood' ? 'floor' : finish}
+            finish={
+              material?.id === 'light_floor' ||
+              material?.id === 'pastel_oak_floor'
+                ? 'light-floor'
+                : finish === 'wood'
+                  ? 'floor'
+                  : finish
+            }
             ceilings={settings.ceilings}
             height={height}
             onSelect={onSelect}

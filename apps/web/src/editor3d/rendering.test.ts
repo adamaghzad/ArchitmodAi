@@ -12,6 +12,7 @@ import {
   DirectionalLight,
   PerspectiveCamera,
   WebGLRenderTarget,
+  Texture,
   type WebGLRenderer,
 } from 'three';
 import catalogue from '../../../../data/catalogue.json';
@@ -19,12 +20,34 @@ import registry from '../../public/assets/registry.json';
 import manifest from '../../public/assets/manifest.json';
 import { parseRegistry } from './assetRegistry';
 import { renderSnapshot } from './renderSnapshot';
-import { metricUV } from './materials';
+import { metricUV, MaterialLibrary } from './materials';
 import { cameraPose } from '../sceneGeometry';
 import { mergeStaticModel } from './modelLoader';
 import { modelInstance } from './modelLoader';
 import type { Product } from '../types';
 import { RenderResources } from './RenderResources';
+
+it('owns palette material clones without mutating cached GLB materials or disposing shared maps', () => {
+  const library = new MaterialLibrary();
+  const source = new MeshStandardMaterial({ color: '#eeeeee', roughness: 0.8 });
+  source.map = new Texture();
+  const mapDisposed = vi.fn();
+  source.map.addEventListener('dispose', mapDisposed);
+  const tinted = library.tinted(source, '#9baa95');
+  expect(tinted.color.getHexString()).toBe('9baa95');
+  expect(source.color.getHexString()).toBe('eeeeee');
+  expect(tinted.roughness).toBe(source.roughness);
+  expect(tinted.map).toBe(source.map);
+  expect(library.tinted(source, '#9baa95')).toBe(tinted);
+  const disposed = vi.fn();
+  tinted.addEventListener('dispose', disposed);
+  const sourceDisposed = vi.fn();
+  source.addEventListener('dispose', sourceDisposed);
+  library.dispose();
+  expect(disposed).toHaveBeenCalledOnce();
+  expect(sourceDisposed).not.toHaveBeenCalled();
+  expect(mapDisposed).not.toHaveBeenCalled();
+});
 
 describe('curated rendering assets', () => {
   it('maps only existing products to local models with verified attribution and intact files', () => {

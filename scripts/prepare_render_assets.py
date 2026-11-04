@@ -165,6 +165,11 @@ def main():
                     "attributionRequired": False,
                     "modifications": "Source GLB unmodified. Runtime static mesh merging and uniform fit. Generic visual proxy, not a merchant product."
                     + (
+                        " Optional per-instance palette tints clone PBR materials; source files and cached source materials stay unchanged."
+                        if name in {"bookshelf", "wardrobe", "reading-chair"}
+                        else ""
+                    )
+                    + (
                         " Bookcase includes project-authored ceramic/book details inside the catalogue envelope."
                         if name == "bookshelf"
                         else ""

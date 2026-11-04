@@ -34,6 +34,53 @@ export interface Furniture {
   room_id: string;
   position: Point;
   rotation_deg: 0 | 90 | 180 | 270;
+  requirement_id?: string | null;
+  support_id?: string | null;
+  elevation_m?: number;
+  fabric_color?: string | null;
+  wood_color?: string | null;
+  light_color?: string | null;
+}
+export interface RenderAuditEntry {
+  id: string;
+  productId: string;
+  status: 'rendered' | 'missing';
+  assetStatus: string;
+  meshes: number;
+  colors: string[];
+}
+export interface CompletionReport {
+  complete: boolean;
+  requested_count: number;
+  placed_count: number;
+  correction_attempts: number;
+  items: {
+    requirement_id: string;
+    name: string;
+    requested: number;
+    placed: number;
+    object_ids: string[];
+    product_ids: string[];
+    reason: string | null;
+    validation_status: string;
+    rendering_status: string;
+    origin?: 'user' | 'template';
+    priority?: string;
+  }[];
+  material_requirements: { name: string; satisfied: boolean; reason: string }[];
+  budget_mad: number;
+  total_mad: number;
+  within_budget: boolean;
+  geometry_valid: boolean;
+  geometry_errors: string[];
+  profile_id?: string | null;
+  user_requirements_complete?: boolean;
+  template_items?: CompletionReport['items'];
+  style_preferences?: {
+    preference: string;
+    satisfied: boolean;
+    reason: string;
+  }[];
 }
 export interface Scene {
   id: string;
@@ -57,6 +104,19 @@ export interface Scene {
     units: number;
   }[];
   notes: string[];
+  design_brief?: {
+    profile_id?: string | null;
+    prompt: string;
+    furniture: {
+      role: string;
+      name: string;
+      quantity: number;
+      room_type: RoomType;
+      priority: string;
+    }[];
+    palette: string[];
+    materials: string[];
+  } | null;
 }
 export interface Product {
   id: string;
@@ -96,6 +156,7 @@ export interface ValidationReport {
   }[];
   total_mad: number;
   sample_prices: boolean;
+  completeness?: CompletionReport | null;
 }
 export interface Project {
   id: string;

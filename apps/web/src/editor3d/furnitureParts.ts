@@ -78,6 +78,30 @@ export function furnitureParts(product: Product): FurniturePart[] {
       box(x, 0.77, -0.24, 0.74 / count - 0.025, 0.33, 0.14, 'fabric');
     }
     box(-0.31, 0.67, 0.08, 0.14, 0.2, 0.2, 'fabric', '#c5c3ac');
+  } else if (category === 'bed' && h >= 0.9) {
+    legs(0.15);
+    box(0, 0.22, 0.015, 0.98, 0.2, 0.96, 'fabric');
+    box(0, 0.39, 0.015, 0.95, 0.16, 0.93, 'fabric', '#f3eee3');
+    box(0, 0.53, -0.465, 1, 0.94, 0.07, 'fabric');
+    for (const x of [-0.37, -0.12, 0.12, 0.37])
+      box(x, 0.65, -0.42, 0.23, 0.68, 0.035, 'fabric');
+    box(0, 0.495, 0.16, 0.96, 0.1, 0.62, 'fabric');
+    for (const x of [-0.235, 0.235]) {
+      box(x, 0.53, -0.29, 0.41, 0.13, 0.21, 'fabric', '#f7f0e5');
+      box(x, 0.59, -0.19, 0.24, 0.12, 0.09, 'fabric', '#9baa95');
+    }
+    box(0, 0.555, 0.35, 0.965, 0.035, 0.17, 'fabric', '#9baa95');
+    for (let i = 0; i < 9; i++)
+      box(
+        -0.43 + i * 0.1075,
+        0.575,
+        0.35,
+        0.012,
+        0.008,
+        0.16,
+        'fabric',
+        '#a9b9a3',
+      );
   } else if (category === 'bed') {
     legs(0.21);
     box(0, 0.3, 0, 0.98, 0.3, 0.98);
@@ -87,6 +111,32 @@ export function furnitureParts(product: Product): FurniturePart[] {
     for (const x of [-0.235, 0.235])
       box(x, 0.77, -0.31, 0.4, 0.13, 0.22, 'fabric', '#f4f0e4');
     box(0, 0.775, 0.36, 0.96, 0.025, 0.14, 'fabric', '#c2b292');
+  } else if (category === 'dressing_table') {
+    legs(0.47);
+    box(0, 0.49, 0, 1, 0.035, 1, 'wood');
+    box(-0.29, 0.43, 0, 0.34, 0.1, 0.88, 'wood');
+    box(-0.29, 0.43, 0.46, 0.13, 0.008, 0.015, 'metal', '#bdab86');
+    box(0, 0.75, -0.39, 0.62, 0.5, 0.09, 'wood');
+    box(0, 0.76, -0.335, 0.54, 0.42, 0.012, 'mirror', '#d8e2dc');
+    add('cylinder', 0.35, 0.54, -0.2, 0.13, 0.06, 0.24, 'ceramic', '#ece5d9');
+  } else if (category === 'plant') {
+    add('cylinder', 0, 0.16, 0, 0.7, 0.32, 0.7, 'ceramic', '#eee3d2');
+    add('cylinder', 0, 0.325, 0, 0.61, 0.015, 0.61, 'dark', '#57473a');
+    add('cylinder', 0, 0.61, 0, 0.035, 0.57, 0.035, 'wood', '#7c8d67');
+    for (let i = 0; i < 9; i++) {
+      const angle = i * 2.4;
+      add(
+        'sphere',
+        Math.cos(angle) * 0.25,
+        0.55 + i * 0.039,
+        Math.sin(angle) * 0.25,
+        0.4,
+        0.22,
+        0.3,
+        'fabric',
+        i % 2 ? '#8da57b' : '#66805f',
+      );
+    }
   } else if (category === 'table' || category === 'desk') {
     legs(0.9);
     box(0, 0.94, 0, 1, 0.12, 1, 'wood');
@@ -189,7 +239,10 @@ export function furnitureParts(product: Product): FurniturePart[] {
     add('cylinder', 0.07, 0.84, -0.37, 0.22, 0.015, 0.22, 'metal', '#aab8a6');
     box(-0.03, 0.55, 0.499, 0.025, 0.1, 0.002, 'metal', '#82907e');
   } else if (category === 'rug') {
-    box(0, 0.5, 0, 1, 1, 1, 'fabric');
+    box(0, 0.5, 0, 0.98, 1, 0.96, 'fabric');
+    for (let i = 0; i < 24; i++)
+      for (const z of [-0.49, 0.49])
+        box(-0.46 + i * 0.04, 0.2, z, 0.012, 0.4, 0.02, 'fabric', '#dfd9c5');
   } else if (category === 'storage' && product.room_types.includes('office')) {
     box(-0.48, 0.5, 0, 0.04, 1, 1);
     box(0.48, 0.5, 0, 0.04, 1, 1);

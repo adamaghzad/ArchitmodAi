@@ -21,13 +21,14 @@ import CameraRig from './editor3d/CameraRig';
 import FurnitureObject from './editor3d/FurnitureObject';
 import Daylight from './editor3d/Daylight';
 import RenderTelemetry from './editor3d/RenderTelemetry';
+import RenderAudit from './editor3d/RenderAudit';
 import type { RenderProgress } from './editor3d/PathTracedRender';
 import { HIGH_QUALITY_SAMPLES } from './editor3d/renderSettings';
 import { MaterialProvider } from './editor3d/MaterialProvider';
 import { EMPTY_REGISTRY, parseRegistry } from './editor3d/assetRegistry';
 import { cameraPose } from './sceneGeometry';
 import type { EditorTool, ViewSettings, CameraCommand } from './editorTypes';
-import type { Product, Scene, Operation } from './types';
+import type { Product, Scene, Operation, RenderAuditEntry } from './types';
 
 interface Props {
   scene: Scene;
@@ -38,6 +39,7 @@ interface Props {
   tool?: EditorTool;
   busy?: boolean;
   settings?: ViewSettings;
+  onAudit?: (items: RenderAuditEntry[]) => void;
 }
 const DEFAULT_SETTINGS: ViewSettings = {
   grid: true,
@@ -63,6 +65,7 @@ export default function SceneView({
   tool = 'select',
   busy = false,
   settings = DEFAULT_SETTINGS,
+  onAudit,
 }: Props) {
   const [registry, setRegistry] = useState(EMPTY_REGISTRY);
   const [registryReady, setRegistryReady] = useState(false);
@@ -227,6 +230,7 @@ export default function SceneView({
             benchmark={benchmark}
             onReport={setPerformanceReport}
           />
+          <RenderAudit model={scene} onAudit={onAudit} />
           <Suspense fallback={<RasterRender />}>
             {highQuality ? (
               <PathTracedRender onProgress={setProgress} />

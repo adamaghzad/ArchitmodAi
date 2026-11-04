@@ -97,7 +97,7 @@ export default memo(function FurnitureObject({
   };
   return (
     <group
-      position={[x, 0.012, y]}
+      position={[x, 0.012 + (item.elevation_m || 0), y]}
       rotation={[0, (-shown.rotation_deg * Math.PI) / 180, 0]}
       name={`furniture:${item.id}`}
       userData={{
@@ -117,14 +117,19 @@ export default memo(function FurnitureObject({
         setPreview(null);
       }}
     >
-      <FurnitureModel product={product} registry={registry} />
+      <FurnitureModel
+        product={product}
+        registry={registry}
+        fabricColor={item.fabric_color}
+        woodColor={item.wood_color}
+      />
       {product.category === 'lighting' && (
         <pointLight
           position={[0, product.height_m * 0.8, 0]}
           intensity={3}
           distance={4}
           decay={2}
-          color="#ffe1aa"
+          color={item.light_color || '#ffe1aa'}
         />
       )}
       {selected && (
