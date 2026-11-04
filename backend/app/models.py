@@ -94,6 +94,15 @@ class Recommendation(Model):
     mock_data: bool = True
 
 
+class DesignAssumptions(Model):
+    """Configurable design checks, not statutory accessibility requirements."""
+
+    min_door_width_m: float = Field(default=0.75, ge=0.5, le=1.5)
+    min_door_height_m: float = Field(default=2, ge=1.8, le=3)
+    circulation_width_m: float = Field(default=0.6, ge=0.3, le=1.5)
+    door_approach_m: float = Field(default=0.6, ge=0.3, le=1.5)
+
+
 class Scene(Model):
     id: str
     units: Literal["m"] = "m"
@@ -108,6 +117,7 @@ class Scene(Model):
     furniture: list[Furniture] = Field(default_factory=list, max_length=1000)
     materials: list[MaterialSelection] = Field(default_factory=list, max_length=1000)
     notes: list[str] = Field(default_factory=list)
+    design_assumptions: DesignAssumptions = Field(default_factory=DesignAssumptions)
 
 
 class Issue(Model):
@@ -125,6 +135,62 @@ class ValidationReport(Model):
     sample_prices: bool = True
     furniture_total_mad: float = 0
     materials_total_mad: float = 0
+
+
+class AgentOperation(Model):
+    type: Literal[
+        "move_furniture",
+        "update_wall",
+        "update_opening",
+        "set_material",
+        "delete_furniture",
+        "place_furniture",
+        "remove_furniture",
+        "replace_furniture",
+        "change_material",
+        "update_room",
+    ]
+    object_id: str
+    position: Point | None = None
+    rotation_deg: Literal[0, 90, 180, 270] | None = None
+    start: Point | None = None
+    end: Point | None = None
+    color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    height: float | None = Field(default=None, gt=0, le=10)
+    thickness: float | None = Field(default=None, gt=0, le=1)
+    offset_m: float | None = Field(default=None, ge=0, le=100)
+    width_m: Positive | None = None
+    height_m: Positive | None = None
+    sill_m: float | None = Field(default=None, ge=0, le=10)
+    product_id: str | None = None
+    room_id: str | None = None
+    surface: Literal["floor", "walls"] | None = None
+    polygon: list[Point] | None = Field(default=None, min_length=3, max_length=64)
+    name: str | None = Field(default=None, min_length=1, max_length=100)
+    room_type: RoomType | None = None
+
+    @model_validator(mode="after")
+    def required_fields(self):
+        fields = {
+            "move_furniture": ("position",),
+            "place_furniture": ("product_id", "room_id"),
+            "replace_furniture": ("product_id",),
+            "change_material": ("product_id", "room_id", "surface"),
+            "set_material": ("color",),
+        }.get(self.type, ())
+        if any(getattr(self, field) is None for field in fields):
+            raise ValueError(f"Missing fields for {self.type}: {', '.join(fields)}")
+        return self
+
+
+class AgentProposal(Model):
+    instruction: str
+    explanation: str
+    operations: list[AgentOperation]
+    base_scene: Scene
+    before_total_mad: float
+    after_total_mad: float
+    base_was_candidate: bool = False
 
 
 class Reference(Model):
@@ -147,6 +213,7 @@ class Project(Model):
     report: ValidationReport | None = None
     recommendations: list[Recommendation] = Field(default_factory=list)
     perception: dict | None = None
+    agent_proposal: AgentProposal | None = None
     undo_stack: list[Scene | None] = Field(default_factory=list, max_length=20)
     redo_stack: list[Scene | None] = Field(default_factory=list, max_length=20)
 
@@ -165,22 +232,8 @@ class TraceRequest(RevisionRequest):
     scale_confirmed: bool
 
 
-class EditRequest(RevisionRequest):
-    type: Literal[
-        "move_furniture", "update_wall", "update_opening", "set_material", "delete_furniture"
-    ]
-    object_id: str
-    position: Point | None = None
-    rotation_deg: Literal[0, 90, 180, 270] | None = None
-    start: Point | None = None
-    end: Point | None = None
-    color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
-    height: float | None = Field(default=None, gt=0, le=10)
-    thickness: float | None = Field(default=None, gt=0, le=1)
-    offset_m: float | None = Field(default=None, ge=0, le=100)
-    width_m: Positive | None = None
-    height_m: Positive | None = None
-    sill_m: float | None = Field(default=None, ge=0, le=10)
+class EditRequest(AgentOperation, RevisionRequest):
+    pass
 
 
 class FurnishRequest(RevisionRequest):
@@ -190,6 +243,33 @@ class FurnishRequest(RevisionRequest):
 class UpdateBriefRequest(RevisionRequest):
     budget_mad: float = Field(ge=0, le=10000000)
     style: Literal["Warm minimal", "Scandinavian", "Contemporary"]
+    design_assumptions: DesignAssumptions | None = None
+
+
+class AgentInstructionRequest(RevisionRequest):
+    instruction: str = Field(min_length=3, max_length=2000)
+    room_id: str | None = None
+    object_id: str | None = None
+
+
+class InstructionIntent(Model):
+    room_ids: list[str] = Field(min_length=1, max_length=8)
+    action: Literal[
+        "replace_room_furniture",
+        "replace_furniture",
+        "place_furniture",
+        "change_material",
+        "edit_objects",
+    ]
+    object_ids: list[str] = Field(default_factory=list, max_length=20)
+    style: Literal["Warm minimal", "Scandinavian", "Contemporary"] | None = None
+    budget_mad: float | None = Field(default=None, ge=0, le=10000000)
+    explanation: str = Field(min_length=1, max_length=1000)
+
+
+class OperationAdvice(Model):
+    operations: list[AgentOperation] = Field(min_length=1, max_length=30)
+    explanation: str = Field(min_length=1, max_length=1000)
 
 
 class AddProductRequest(RevisionRequest):
