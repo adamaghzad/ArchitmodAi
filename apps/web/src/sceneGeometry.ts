@@ -108,13 +108,26 @@ export function cameraPose(
   preset: CameraPreset = 'isometric',
 ) {
   const height = scene.height_m || 2.8;
+  if (preset === 'interior')
+    return {
+      position: [scene.width_m * 0.42, 1.6, scene.depth_m * 0.4] as [
+        number,
+        number,
+        number,
+      ],
+      target: [-scene.width_m * 0.04, 1.1, -scene.depth_m * 0.1] as [
+        number,
+        number,
+        number,
+      ],
+    };
   const target: [number, number, number] = [0, height * 0.3, 0];
   const vector =
     preset === 'top'
       ? [0, 1, 0.001]
       : preset === 'perspective'
         ? [0.65, 0.48, 1]
-        : [0.65, 1.4, 1];
+        : [0.7, 1, 1];
   const norm = Math.hypot(...vector),
     [dx, dy, dz] = vector.map((value) => value / norm);
   const horizontal = Math.hypot(dx, dz);

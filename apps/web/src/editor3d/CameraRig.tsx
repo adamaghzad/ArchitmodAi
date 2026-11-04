@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { ComponentRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { Vector3, MOUSE } from 'three';
+import { Vector3, MOUSE, PerspectiveCamera } from 'three';
 import { cameraPose } from '../sceneGeometry';
 import type { CameraCommand } from '../editorTypes';
 import type { Scene } from '../types';
@@ -38,6 +38,12 @@ export default function CameraRig({
         target: orbit.target.clone(),
       };
     } else {
+      if (camera instanceof PerspectiveCamera) {
+        const fov = command.action === 'interior' ? 65 : 38;
+        camera.setFocalLength(
+          camera.getFilmHeight() / (2 * Math.tan((fov * Math.PI) / 360)),
+        );
+      }
       const preset =
         command.action === 'fit' || command.action === 'reset'
           ? 'isometric'
