@@ -1,0 +1,28 @@
+{
+  "conditions": "Headless Chromium, Vite development server, stationary isometric camera, continuous demand frames, 1 s warm-up and 4 s sample",
+  "results": [
+    {
+      "fps": 60,
+      "p95FrameMs": 17.8,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x00002D19) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 241,
+      "textures": 81,
+      "geometries": 118,
+      "contactDetail": true
+    },
+    {
+      "fps": 60,
+      "p95FrameMs": 17.8,
+      "width": 1920,
+      "height": 1080,
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x00002D19) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 242,
+      "textures": 75,
+      "geometries": 117,
+      "contactDetail": false
+    }
+  ],
+  "effectResources": [75, 75]
+}
