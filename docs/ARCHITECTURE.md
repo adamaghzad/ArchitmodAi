@@ -22,9 +22,11 @@ Furniture and material selections store product IDs separately from catalogue re
 
 The lazy-loaded 3D layer separates `Architecture`, `FurnitureObject`, `FurnitureModel` and `CameraRig`. Architecture uses actual wall splits, opaque surfaces, opening frames, baseboards and optional ceilings. Cutaway lowers the near exterior wall visually without changing canonical wall heights. Catalogue finish selections drive cached procedural PBR materials; unassigned surfaces are preview finishes and add no cost.
 
-`editor3d/furnitureParts.ts` defines dimensionally bounded furniture components. `assetRegistry.ts` accepts local GLB/glTF paths with license/source metadata from `public/assets/registry.json`. `modelLoader.ts` caches loads, clones source graphs and applies uniform fit inside the stored footprint. Failed loads fall back automatically. The registry is empty by default; no external model or texture was bundled. See the asset folder READMEs for setup.
+`editor3d/furnitureParts.ts` defines dimensionally bounded furniture components, including task-chair and filled bookcase fallbacks. `assetRegistry.ts` accepts local GLB/glTF, PBR maps and HDRI paths with source/license metadata from `public/assets/registry.json`. `modelLoader.ts` caches loads, merges compatible static meshes by material, clones source graphs and applies uniform fit inside the stored footprint. Failed loads fall back automatically. The curated library includes eleven individually licensed CC0 GLBs and local Poly Haven scans/HDRI, with author, attribution requirements, sizes and hashes in `public/assets/manifest.json`. Existing catalogue IDs and dimensions remain unchanged. See [interior rendering](RENDERING.md) for sources, mode behavior and budgets.
 
 Rendering uses demand frames, capped DPR, cached materials/textures and shapes, memoized architectural/furniture components and lazy optional assets. Canvas resources are disposed on unmount; GLB sources remain cached for reuse. Lighting uses procedural environment panels, daylight, soft shadows, sRGB color output and ACES tone mapping. Camera commands fit the metric scene bounds and animate through the existing OrbitControls.
+
+The licensed rendering milestone adds local HDRI/scanned finishes, a lazy react-postprocessing contact-detail pass, and an optional path-traced snapshot that shares actual mesh resources and the existing camera. `RenderResources` captures only synchronous tracer-owned targets/passes and restores renderer methods before returning to Fiber or a worker; scene materials remain owned by the interactive renderer. The orientation HUD stays mounted across mode changes and renders after the main pass. The SSAO noise texture has an explicit cleanup callback. These boundaries prevent repeated renders from accumulating packed targets, HUD maps or effect noise textures. Curated imports whose proportions would fill less than 65% of either stored footprint axis use the dimensional procedural fallback.
 
 ## State and persistence
 
@@ -84,4 +86,4 @@ Trained floor-plan reconstruction, professional geometry constraints, authorized
 - [uv projects](https://docs.astral.sh/uv/guides/projects/)
 - [Playwright web servers](https://playwright.dev/docs/test-webserver)
 
-Dependency versions are captured in `package-lock.json` and `backend/uv.lock`. Review dependency and dataset/asset licenses before redistribution or commercial use; no external dataset or furniture assets have been downloaded into this repository.
+Dependency versions are captured in `package-lock.json` and `backend/uv.lock`. No external training dataset is included. The individually curated rendering assets and their verified licenses are recorded in the [asset manifest](../apps/web/public/assets/manifest.json).

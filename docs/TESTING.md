@@ -28,7 +28,11 @@ The four-room workspace flow also drags actual SVG furniture, verifies canonical
 
 ## Limits and acceptance
 
-The user has not specified a coverage threshold or final feature acceptance criteria. The checks above are the implementation's initial verification set; they are not an agreed exhaustive acceptance contract.
+The 2026-11-04 rendering milestone has user-approved acceptance checks. `e2e/rendering.spec.ts` seeds the canonical 5 × 4 m office into isolated storage, checks loaded model bounds/floor contact, actual raycast selection, scene JSON and camera continuity, captures all modes, exercises cancellation and checks stable warm GPU resource counts across repeated traces. Its opt-in hardware benchmark measures a real 1920 × 1080 drawing buffer with contact detail both enabled and disabled. Shader compilation is included in quality-render duration, and frame measurements exclude a one-second warm-up. First-use scene map uploads are cached intentionally; repeated render-owned allocations must be released.
+
+Windows/SwiftShader baselines live in `e2e/rendering.spec.ts-snapshots/`: 2D permits 1% differing pixels at a 0.2 per-pixel threshold; interactive 3D permits 1% at 0.25 to tolerate shader noise. Refresh deliberately with `npx playwright test e2e/rendering.spec.ts --update-snapshots` and inspect the images before accepting them. Stochastic progressive frames are captured and checked for geometry/camera consistency instead of requiring identical pixels. Set `ARCHAI_HARDWARE_RENDER=1` to request the high-performance D3D11 adapter; the report records the adapter actually selected. Hardware runs retain a converged 256-sample image; software runs verify an actual sample and cancellation. They invoke no live inference.
+
+The user has not specified a coverage threshold or exhaustive acceptance for the broader research project. The approved rendering milestone does not establish final acceptance for unrelated perception, inference or professional architecture requirements.
 
 Automated tests isolate Ollama requests with valid and malformed mocked LangChain responses; they never download or invoke language models. GPU memory failure is simulated to verify a single CPU retry. Live checks are explicit and separate. A live model smoke test, if performed, is recorded separately in HANDOFF.md. Automated training metrics and dataset benchmarks require an implemented perception pipeline and an approved dataset; they are not represented by the current test suite.
 

@@ -1,5 +1,7 @@
 # Workspace upgrade
 
+The 2026-11-04 licensed interior-rendering brief extends this earlier workspace milestone. Its approved 5 × 4 m Japandi scene, furniture-first priorities, licensed assets, rendering modes and verification are recorded in [RENDERING.md](RENDERING.md). The earlier empty asset registry and procedural-only implementation described below are historical.
+
 ## Audit and scope
 
 The user supplied a detailed workspace upgrade brief and two visual references on 2026-11-03. This extends the existing application; it does not replace its architecture.
