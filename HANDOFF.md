@@ -1,12 +1,27 @@
 # Handoff
 
-Last updated: 2026-11-03.
+Last updated: 2026-11-04.
+
+## Git delivery
+
+The user requested exactly 50 additional, professionally named commits and a push on 2026-11-04. The delivery groups all pending backend, licensed asset, renderer, verification and documentation changes into focused Conventional Commits on `main`, preserving the original 81 commits and existing Git identity. The configured destination is `https://github.com/adamaghzad/ArchitmodAi.git`; the remote starting `main` matched local `7b40cc8`. Local `.env` files, `.local` data, dependencies and generated browser/build output remain excluded.
+
+The complete final application tree passed the rendering verification below before history packaging; intermediate commits are incremental file groups and were not individually tested. Packaging updates this delivery documentation and normalizes third-party notice line endings without changing license wording. Verify the final 50-commit count, clean working tree and matching remote HEAD after pushing; the actual remote outcome is reported in the delivery response.
 
 ## Requested outcome
 
 Start building the project from the PDF using simple engineering, meaningful unit/end-to-end tests, linters, formatters, official documentation, and durable handoff files. Avoid release labels in project naming. The user subsequently confirmed local Windows inference and the detailed Furniture & Materials Marketplace requirements recorded in DEVELOPMENT_RULES.md and CONTEXT.md.
 
-The latest task upgrades the existing workspace against two supplied visual references, with realistic procedural furniture, PBR surfaces, lighting, cameras, contextual editing, preserved geometry and AI/catalogue integration. The user confirmed no prepared local assets. See [workspace upgrade](docs/WORKSPACE_UPGRADE.md) for scope and acceptance.
+The previous task upgraded the workspace against two supplied visual references. The current task adds licensed interior-rendering assets and an approved 5 × 4 m Japandi office acceptance scene, while preserving the existing application, canonical scene, catalogue dimensions and unrelated backend work. See [interior rendering](docs/RENDERING.md) for scope, asset credits and reproduction.
+
+## Licensed rendering milestone
+
+- Eleven individually curated Innerscene CC0 GLBs cover walnut desk, ergonomic task chair, filled bookshelf, upholstered armchair, side table, lamp, sofa, bed, wardrobe, vanity and WC. Poly Haven CC0 floor/walnut/plaster scans and a local 1k HDRI accompany them. Sources, authors, attribution requirements, sizes and SHA-256 hashes are recorded in `public/assets/manifest.json`; third-party code notices are bundled separately. Approximately 37.79 MiB of individually selected assets are included; startup/install/build never download an asset library.
+- The existing loader now merges compatible static meshes by material, preserves transforms, caches sources and uniformly fits within catalogue bounds. Recognizable task-chair and bookcase fallbacks are improved. A minimum footprint-fill setting rejects imports that would become misleadingly small: the tall bed model currently uses the dimensional procedural fallback for the low catalogue bed envelope. Existing records, costs and collision dimensions remain unchanged. Bookcase vase/book details belong to its existing furniture object and stay inside its envelope.
+- PBR materials use metre-based UVs, linear normal/roughness data, correctly scaled wood flooring and subtle painted plaster detail. Furniture rests at the actual floor elevation. HDRI/daylight, warm lamp lighting and optional half-resolution SSAO improve the interactive viewport. Isometric framing and a 1.6 m interior camera preserve orbit/pan/zoom. Cutaway opening frames/doors follow their wall cap to avoid floating window assemblies.
+- Interactive and optional 256-sample quality modes use the same architecture and camera. `three-gpu-pathtracer@0.0.24` is pinned for Three.js 0.181/WebGL compatibility, lazy-loaded with a BVH worker, bounded texture arrays/tiles/render width, progress, shader-compilation status and cancellation. A spatial denoise pass reduces grain. The adapter explicitly tracks/disposes owned packed targets and passes omitted by the upstream lifecycle, preserving scene-owned maps and geometry. Vite prebundles lazy dependencies to avoid development reloads when first entering a mode.
+- `data/scenes/japandi-office.json` and `scripts/create_render_review.py` reproduce the seven-object room with two windows, entrance, material quantities and the existing 0.6 m circulation assumptions. The seed script only writes isolated review/test data. Rendering tests check actual GLBs, floor contact, bounds, camera continuity, raycast selection, canonical JSON preservation, cancellation and resource stability. Windows/SwiftShader screenshot baselines cover 2D and interactive 3D; hardware screenshots and raw measurements are retained in `docs/rendering/`.
+- Pre-existing uncommitted backend edits were preserved. No unrelated LangGraph workflow, marketplace behavior, generation logic, hosted inference, deployment, source push or Git commit was introduced.
 
 ## Implemented
 
@@ -30,7 +45,15 @@ The latest task upgrades the existing workspace against two supplied visual refe
 - Backend: additive history/snapshot/brief APIs and project fields; inward door-sector and wall-thickness collision checks; related object IDs; selected material quantities/costs refreshed after geometry edits; LangGraph optional local AI furnishing followed by deterministic catalogue placement/validation. Existing APIs retain deterministic furnishing unless `use_ai` is set.
 - AI furnishing is a candidate with explicit review/reject/approve. Further edits clear the proposal banner and use ordinary draft history, preventing a rejection button from undoing an unrelated later edit. Approval remains the only committed-scene mutation.
 
-## Verification completed
+## Rendering verification
+
+- `npm test`: 17 frontend and 37 backend unit/API tests passed.
+- `npm run lint`, `npm run format:check`, TypeScript checking and `npm run build` passed. Vite retains the expected warning for the lazily loaded Three.js chunk.
+- `ARCHAI_HARDWARE_RENDER=1 npm run test:e2e`: all nine Chromium scenarios passed in 5.1 minutes. The 256-sample office render took 132.6 seconds including shader compilation; actual 1920 × 1080 interactive measurements were 60 FPS with and without contact detail, on the RTX 5060 Laptop GPU. Warm repeated-render counts returned exactly to 81 textures and 118 geometries; repeated SSAO toggles also returned to the same texture count.
+- The independent Windows/SwiftShader rendering run passed the 2D/3D pixel baselines, real progressive rendering, cancellation, bounds, floor contact, camera and selection checks. Its GPU-only benchmark was intentionally skipped. Camera completion checks allow 30 seconds for slow software rendering; no application behavior was relaxed.
+- [Screenshots, measured conditions and raw reports](docs/rendering/README.md) are retained in the repository. The office validator reports no hard errors, with the normal concept/sample-data warnings. No live inference was invoked.
+
+## Earlier workspace verification
 
 - `npm test`: 10 frontend geometry/asset tests and 37 backend unit/API tests passed after the workspace upgrade.
 - `npm run test:e2e`: all seven Chromium scenarios passed in the final full run (3.9 minutes), covering the original five workflows plus synchronized editing/materials/cameras/snapshots and invalid-GLB fallback/cache behavior.
@@ -59,8 +82,8 @@ For this documentation/check-in task, ESLint/Ruff and repository formatting chec
 
 - No trained segmentation weights, full room/opening reconstruction, dataset training/evaluation, or authorized commercial catalogue feeds have been supplied. The interfaces are implemented; sample data remains explicitly mock_data.
 - Layouts and edits are constrained to the documented rectangular geometry model. Adjacency, circulation, daylight, services, and professional building-code validation remain unverified. Wall corrections do not automatically rebuild room topology.
-- Recognizable procedural furniture represents actual product bounds, but is an approximate visual proxy rather than an exact merchant model or photorealistic asset. No licensed external asset is included by default. Material estimates use stored illustrative effective coverage, declared waste, and wall-centre-line geometry. Unassigned procedural preview finishes do not add shopping-list costs.
-- Software-rendered browser tests validate interaction and visible output, not frame-rate performance on the user's RTX GPU. The configured GPU and live AI furnishing quality have not been benchmarked during this rendering upgrade; mocked AI tests verify stored product IDs and approval isolation. Prior foundation live inference smoke checks remain historical observations above.
+- Rendered furniture remains a generic visual proxy rather than an exact merchant model. Licensed GLBs supplement procedural fallbacks; mismatched proportions can leave unused envelope space or trigger a fallback. Material estimates still use illustrative coverage, declared waste and wall-centre-line geometry. Unassigned preview finishes add no shopping-list costs. Progressive images retain some grain/softening, and the initial quality shader can take substantial time to compile.
+- The current office's hardware rendering conditions and measurements are recorded in `docs/rendering/`; larger-scene performance, peak VRAM and concurrent local inference remain unbenchmarked. Earlier software browser checks and live inference smoke tests are historical observations. Mocked AI checks do not establish live furnishing quality.
 - The user has not set exhaustive acceptance criteria or a coverage threshold. Current tests validate the implemented foundation, not the full academic research blueprint.
 - Supervisor routing is deterministic for explicit entry choices. Experimental llava vision and the alternative embedding model are configurable but are not invoked automatically.
 - The marketplace has no seller accounts, checkout, payments, orders, inventory operations, reviews, or live stock synchronization, as requested.
