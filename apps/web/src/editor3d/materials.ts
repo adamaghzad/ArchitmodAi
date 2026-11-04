@@ -8,9 +8,15 @@ import {
   DoubleSide,
   NoColorSpace,
   Color,
+  TextureLoader,
+  Texture,
+  Vector2,
+  BufferGeometry,
 } from 'three';
+import type { MaterialAsset } from './assetRegistry';
 
 export type Finish =
+  | 'floor'
   | 'wood'
   | 'fabric'
   | 'ceramic'
@@ -23,6 +29,7 @@ export type Finish =
   | 'dark';
 
 function texture(kind: Finish): CanvasTexture | null {
+  if (kind === 'floor') kind = 'wood';
   if (['glass', 'metal', 'light', 'dark'].includes(kind)) return null;
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 256;
@@ -97,6 +104,12 @@ export class MaterialLibrary {
   private textures = new Map<Finish, CanvasTexture | null>();
   private materials = new Map<string, MeshStandardMaterial>();
   private bumps = new Map<Finish, CanvasTexture>();
+  private loaded = new Set<Texture>();
+  private disposed = false;
+  constructor(
+    private assets: MaterialAsset[] = [],
+    private invalidate: () => void = () => {},
+  ) {}
   get(kind: Finish, color: string) {
     const key = `${kind}:${color}`;
     const existing = this.materials.get(key);
@@ -134,7 +147,7 @@ export class MaterialLibrary {
                       ? 0.68
                       : 0.92,
             metalness: kind === 'metal' ? 0.78 : 0,
-            bumpMap: this.bumps.get(kind) || null,
+            bumpMap: kind === 'ceramic' ? null : this.bumps.get(kind) || null,
             bumpScale:
               kind === 'fabric' ? 0.001 : kind === 'wood' ? 0.002 : 0.0008,
             side: DoubleSide,
@@ -145,13 +158,87 @@ export class MaterialLibrary {
       material.toneMapped = false;
     }
     this.materials.set(key, material);
+    const asset = this.assets.find((entry) => entry.finish === kind);
+    if (asset) {
+      // One set of image sources per finish, reused across colour variants.
+      this.loadPbr(asset, material);
+    }
     return material;
   }
+  private pbr = new Map<string, Promise<Texture[]>>();
+  private loadPbr(asset: MaterialAsset, material: MeshStandardMaterial) {
+    if (!this.pbr.has(asset.id)) {
+      const loader = new TextureLoader();
+      this.pbr.set(
+        asset.id,
+        Promise.all(
+          ['map', 'normalMap', 'roughnessMap'].map((channel) =>
+            loader
+              .loadAsync(asset[channel as 'map' | 'normalMap' | 'roughnessMap'])
+              .then((map) => {
+                if (this.disposed) {
+                  map.dispose();
+                  return map;
+                }
+                map.wrapS = map.wrapT = RepeatWrapping;
+                map.repeat.setScalar(1 / asset.tileMeters);
+                map.colorSpace =
+                  channel === 'map' ? SRGBColorSpace : NoColorSpace;
+                map.anisotropy = 4;
+                this.loaded.add(map);
+                return map;
+              }),
+          ),
+        ),
+      );
+    }
+    this.pbr
+      .get(asset.id)!
+      .then(([map, normal, roughness]) => {
+        if (this.disposed) return;
+        // Painted plaster uses the scan's microstructure, retaining the chosen
+        // paint colour rather than baking the photographed grey stains into it.
+        material.map = asset.finish === 'plaster' ? null : map;
+        material.normalMap = normal;
+        material.normalScale = new Vector2(
+          asset.finish === 'plaster' ? 0.08 : 0.35,
+          asset.finish === 'plaster' ? 0.08 : 0.35,
+        );
+        material.roughnessMap = roughness;
+        material.bumpMap = null;
+        // Preview colour remains a catalogue-driven tint; scans provide fine detail.
+        material.roughness = 0.95;
+        material.needsUpdate = true;
+        this.invalidate();
+      })
+      .catch(() => {}); // The complete procedural material remains on any failure.
+  }
   dispose() {
+    this.disposed = true;
     this.materials.forEach((material) => material.dispose());
     this.textures.forEach((map) => map?.dispose());
     this.bumps.forEach((map) => map.dispose());
+    this.loaded.forEach((map) => map.dispose());
   }
+}
+
+// BoxGeometry's default 0..1 UVs stretch a texture across each wall. Project each
+// face in metres so every box uses the same physical texture scale as the floor.
+export function metricUV(geometry: BufferGeometry) {
+  const position = geometry.getAttribute('position');
+  const normal = geometry.getAttribute('normal');
+  const uv = geometry.getAttribute('uv');
+  if (!position || !normal || !uv) return;
+  for (let i = 0; i < position.count; i++) {
+    const x = Math.abs(normal.getX(i)),
+      y = Math.abs(normal.getY(i));
+    uv.setXY(
+      i,
+      x > 0.5 ? position.getZ(i) : position.getX(i),
+      y > 0.5 ? position.getZ(i) : position.getY(i),
+    );
+  }
+  uv.needsUpdate = true;
 }
 
 export const MaterialContext = createContext<MaterialLibrary | null>(null);
