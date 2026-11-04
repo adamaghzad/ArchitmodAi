@@ -6,7 +6,7 @@ from .inference import InferenceError, structured
 from .models import RepairAdvice, Scene
 
 
-def repair_candidate(scene: Scene) -> Scene:
+def repair_candidate(scene: Scene, allowed_object_ids: set[str] | None = None) -> Scene:
     candidate = scene.model_copy(deep=True)
     for _attempt in range(3):
         report = validate_scene(candidate)
@@ -27,10 +27,17 @@ def repair_candidate(scene: Scene) -> Scene:
                     "errors": [
                         issue.model_dump() for issue in report.issues if issue.severity == "error"
                     ],
+                    "allowed_object_ids": sorted(allowed_object_ids)
+                    if allowed_object_ids is not None
+                    else [item.id for item in candidate.furniture],
                 }
             ),
         )
-        allowed = {item.id: item for item in candidate.furniture}
+        allowed = {
+            item.id: item
+            for item in candidate.furniture
+            if allowed_object_ids is None or item.id in allowed_object_ids
+        }
         if any(move.object_id not in allowed for move in advice.moves):
             raise InferenceError(
                 "Correction agent proposed an unknown object. No changes were saved."
