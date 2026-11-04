@@ -1,5 +1,9 @@
 # Handoff
 
+## Dounia Ouakil branch — 2026-11-04
+
+The user requested a branch named for Dounia Ouakil containing all their existing commits. Created `dounia-ouakil` from `e604051`, retaining all 140 existing commits and their original authorship. This branch is the current working branch; `main` retains its existing history. The branch is intended to track `origin/dounia-ouakil`. This Git/documentation task changes no application behavior; verification checks commit ancestry, branch tracking and remote/local agreement rather than rerunning application tests.
+
 ## README visual examples — 2026-11-04
 
 Added a gallery near the top of README with five existing application screenshots: the Japandi office in high-quality mode, the pastel bedroom and its 2D floor plan, and Scandinavian/Industrial style comparisons. Images have descriptive alt text, links to full-size files, and links to scene/asset/verification documentation. No new images, dependencies or application behavior were introduced. `npm run format:check`, `git diff --check` and existence/image-integrity checks for all five references passed. Full workflow tests were not repeated for this documentation-only update; the preceding implementation results remain recorded below.

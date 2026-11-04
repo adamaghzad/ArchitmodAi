@@ -2,6 +2,8 @@
 
 Last updated: 2026-11-04.
 
+The user requested the `dounia-ouakil` branch containing all existing work. It starts from `e604051` with the complete 140-commit history and preserves commit authorship; the working branch is now `dounia-ouakil`, with `origin/dounia-ouakil` as its remote target.
+
 The README now includes actual rendered interior examples and a matching floor plan, as requested by the user. The gallery reuses tracked Japandi office, pastel bedroom and style-comparison screenshots, with links to their source reviews.
 
 ## Interior design knowledge — current implementation
