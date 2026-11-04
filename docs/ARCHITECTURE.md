@@ -1,5 +1,7 @@
 # Architecture
 
+The [interior design knowledge base](INTERIOR_DESIGN_KNOWLEDGE.md) supplies five validated style profiles to Requirements, Furniture, Materials and scoped instruction/recommendation agents. A separate persisted template layer keeps explicit requirements authoritative. EmbeddingGemma scores rank eligible catalogue candidates; metric/budget filters and final Shapely/OR-Tools checks remain deterministic. Profile/ranking/fallback traces and fresh user/template completeness are part of the canonical scene/report boundary.
+
 ## Structure
 
 ```text
@@ -38,6 +40,10 @@ Drafts and approvals persist in `.local/projects.sqlite3`. Reference files persi
 
 ## Generation and validation
 
+The bedroom completeness repair extends this flow with a persisted source brief and quantity-bearing furniture requirements. A brief can request furnishing during generation; existing API clients still receive layout-only behavior by default. Catalogue ranking feeds finite Shapely candidate sets and bounded CP-SAT selection; original quantities do not depend on the number of unique IDs returned by an agent. The furnishing graph applies quantity-costed finishes, validates current requirements and retries missing furniture at most twice. `ValidationReport.completeness` is recomputed after edits. Browser `RenderAudit` reports actual mesh presence, representation status and applied colours separately from server placement. See [bedroom pipeline](BEDROOM_PIPELINE.md) for limits, structured logs and reproduction.
+
+Supported lamps have a canonical support ID and elevation. Shared vertical occupancy rules allow supported footprints and rugs without removing their scene identities; door, boundary and circulation checks remain active. Parent movement/replacement/removal maintains these relationships. Existing product dimensions stay fixed; new semantic cases use explicitly mock records.
+
 The explicit room list is always available. If an operator configures Ollama, an optional structured-output request extracts room types and minimum areas from a prompt. Pydantic rejects unsupported types and fields. No model-generated code is executed.
 
 OR-Tools uses integral decimetres and bounded rectangular room variables. It enforces minimum areas, footprint containment, and non-overlap. The objective favors footprint coverage and compact room proportions. A two-second search budget returns a feasible candidate or an explicit failure. The result does not guarantee connected circulation or professional architectural feasibility.
@@ -58,7 +64,7 @@ OpenCV uses bounded image resizing, Canny edges and Hough line detection to retu
 
 ## Catalogue providers
 
-`data/catalogue.json` contains 52 validated records with flat IDs/attributes suitable for later PostgreSQL migration. Every invented product, price and availability is explicitly `mock_data`; product and image URLs are null. Generic SVG illustrations and dimensionally scaled procedural furniture avoid implying exact merchant models.
+`data/catalogue.json` contains 56 validated records with flat IDs/attributes suitable for later PostgreSQL migration. Every invented product, price and availability is explicitly `mock_data`; product and image URLs are null. Generic SVG illustrations and dimensionally scaled procedural furniture avoid implying exact merchant models.
 
 `CatalogueProvider.list_products()` is the integration boundary for authorized APIs/feeds. `CATALOGUE_PROVIDER=local_json` is the default; trusted custom factories can be configured with `CATALOGUE_PROVIDER_FACTORY=module:function`. No retailer scraping exists. IKEA Morocco, KITEA and Bricoma are target providers, not connected commercial sources.
 

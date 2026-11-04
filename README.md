@@ -1,5 +1,9 @@
 # ArchAI Studio
 
+The [interior design knowledge base](docs/INTERIOR_DESIGN_KNOWLEDGE.md) guides generation with Scandinavian, Japandi, Korean Pastel, Modern Minimalist and Industrial profiles. Choose a style in the project form or design brief; inspect requested/template furniture, missing reasons and style coverage in the Inspector. Semantic ranking reuses the configured EmbeddingGemma model, with an explicit offline fallback.
+
+The [pastel bedroom pipeline review](docs/BEDROOM_PIPELINE.md) documents quantity-aware generation, applied finishes, completeness reporting, isolated reproduction and [same-camera before/after screenshots](docs/bedroom/README.md).
+
 A local workspace for exploring floor plans and interior layouts, based on [the project brief](ArchAI_Project_Documentation.pdf).
 
 The application connects a React/TypeScript 2D and 3D editor to a FastAPI backend. One canonical scene drives both views. OR-Tools generates rectangular layouts, Shapely checks geometry, and LangGraph workflows place sample catalogue furniture and generate reviewable furniture/material recommendations. Drafts remain separate from approved snapshots.

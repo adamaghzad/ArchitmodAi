@@ -2,6 +2,12 @@
 
 Last updated: 2026-11-04.
 
+## Interior design knowledge — current implementation
+
+The user authorized five structured style profiles with all-room furnishing templates and shared Requirements/Furniture/Materials retrieval. Implemented profiles live in `data/interior_styles.json`; legacy style names resolve as aliases. Product ranking combines soft style, dimensions, remaining purchase-unit budget and existing EmbeddingGemma similarity with recorded offline/failure fallback. Explicit quantities/exclusions override templates; geometry and catalogue provenance remain authoritative. Completeness distinguishes explicit requests, template suggestions and material/palette/lighting preferences. Both UI selectors expose the five styles, and canonical furniture colours/lamp light/finish choices reach Three.js and the 2D floor colour. No new models or asset collections were downloaded. See [knowledge design and verification](docs/INTERIOR_DESIGN_KNOWLEDGE.md) and HANDOFF for actual check results.
+
+The user subsequently requested committing and pushing this pending bedroom/knowledge-base work in separate focused commits, without specifying a count. The earlier 50-commit renderer delivery is complete at `e72286b`; the current delivery preserves that history and uses the existing `main`/`origin` without force.
+
 ## Source and current state
 
 - Repository directory: ArchitmodAi.
@@ -32,7 +38,7 @@ These are source-brief statements, not claims of implemented functionality or an
 - Local development is confirmed. The user reports 32 GB RAM and an RTX 5060 with 8 GB VRAM; `nvidia-smi` confirmed an RTX 5060 Laptop GPU with 8151 MiB. Existing Ollama models were inspected; no language, embedding, vision weights, datasets, or furniture asset libraries were downloaded.
 - Role models and endpoints are configurable in backend/.env; defaults match the user's supplied models. Model calls share a process-wide lock and unload after requests. CPU retry is limited to memory-related failures.
 - The marketplace scope is confirmed: discovery/filtering/sorting, correctly scaled scene placement, comparisons/replacements, furniture/material recommendations with accept/reject, budget and material quantities, project shopping lists, and PDF/CSV export. Commerce operations are excluded; see DEVELOPMENT_RULES.md.
-- The local catalogue contains 52 explicitly labelled mock JSON records, including toilet and shower fixtures added for the workspace upgrade. Existing product IDs are preserved; there are no fabricated commercial URLs. Provider and segmentation interfaces are available for future authorized feeds and locally trained models.
+- The local catalogue contains 56 explicitly labelled mock JSON records, including toilet/shower fixtures and four bedroom/material records added by the workspace and bedroom upgrades. Existing product IDs are preserved; there are no fabricated commercial URLs. Provider and segmentation interfaces are available for future authorized feeds and locally trained models.
 - The user subsequently requested a professional workspace and realistic rendering upgrade using two supplied visual references. The brief and acceptance are recorded in [docs/WORKSPACE_UPGRADE.md](docs/WORKSPACE_UPGRADE.md). Preserve the existing React/Three/FastAPI/LangGraph architecture and canonical geometry.
 - At the preceding workspace upgrade, the user had no prepared GLB/glTF or texture assets. That upgrade added procedural PBR materials and an optional licensed loader. The subsequent licensed rendering milestone includes individually selected assets as described below. Asset appearance must never override stored dimensions, placement or collision checks.
 - The workspace now includes real navigation, contextual properties, SVG editing, camera presets, persisted draft undo/redo, approved snapshot restoration, synchronized material quantities and an optional local AI furnishing proposal. These additions retain candidate/approval isolation and optimistic revisions.
@@ -49,6 +55,8 @@ Interactive rendering uses cached meshes merged by material, metre-based materia
 The acceptance fixture and isolated seed script are in `data/scenes/japandi-office.json` and `scripts/create_render_review.py`. The existing geometry service validates its door, walls, catalogue footprints and configured 0.6 m circulation assumptions. See [rendering documentation](docs/RENDERING.md) and HANDOFF for reproducible checks and results. No inference models or live LangGraph calls are used by rendering tests.
 
 ## Implementation boundaries
+
+The subsequent 2026-11-04 bedroom task repairs lost prompt/furniture quantities and unapplied style across the generation pipeline. `Scene.design_brief` persists text and needs; furnishing uses Shapely candidate regions and bounded CP-SAT selection, applies finishes and reports missing requirements through at most two correction attempts. `ValidationReport.completeness` is derived from the current scene, with a separate actual mesh audit in the browser. Short lamps have validated support/elevation relationships; rugs remain floor coverings. The catalogue now has 56 explicitly mock records, adding a headboard-height double bed, dressing vanity/mirror, potted plant and light-oak floor without changing existing dimensions/prices. Existing CC0 assets are reused with owned palette material clones; no additional assets or inference weights are downloaded. See [bedroom pipeline](docs/BEDROOM_PIPELINE.md) and [comparison evidence](docs/bedroom/README.md).
 
 - Both renderers read the same canonical scene. Candidate changes never overwrite committed snapshots until validated approval.
 - The layout solver handles axis-aligned rectangular rooms and minimum areas. Adjacency/circulation and professional building rules are unverified.

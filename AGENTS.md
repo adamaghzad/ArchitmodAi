@@ -17,3 +17,7 @@ Use [README.md](README.md) for setup and commands, [architecture](docs/ARCHITECT
 The current rendering and workspace requirements are recorded in [workspace upgrade](docs/WORKSPACE_UPGRADE.md). Preserve metric geometry and catalogue provenance while improving appearance; optional assets require source/license metadata and a procedural fallback.
 
 The latest approved licensed-rendering milestone and reproducible Japandi office review are recorded in [interior rendering](docs/RENDERING.md). Preserve the existing scene JSON and unrelated backend workflows, and keep performance claims tied to measured adapter, resolution and conditions.
+
+The subsequent bedroom pipeline repair is recorded in [bedroom generation](docs/BEDROOM_PIPELINE.md). Preserve the original brief/quantities, per-item completeness reasons, bounded correction and the distinction between canonical placement and actual browser rendering evidence.
+
+The style knowledge base is documented in [interior design knowledge](docs/INTERIOR_DESIGN_KNOWLEDGE.md). Profiles are preferences; explicit requirements, catalogue provenance, geometry and the shared budget are authoritative. Keep automated tests independent of live embedding/model calls.
