@@ -1,0 +1,190 @@
+{
+  "sourceCommit": "e72286b",
+  "scene": {
+    "id": "bedroom-review",
+    "units": "m",
+    "width_m": 5,
+    "depth_m": 4,
+    "scale_confirmed": true,
+    "style": "Warm minimal",
+    "budget_mad": 20000,
+    "rooms": [
+      {
+        "id": "room_1",
+        "type": "bedroom",
+        "name": "Bedroom 01",
+        "polygon": [
+          [0, 0],
+          [5, 0],
+          [5, 4],
+          [0, 4]
+        ],
+        "color": "#a8b7ad",
+        "provenance": "ai_generated"
+      }
+    ],
+    "walls": [
+      {
+        "id": "wall_1",
+        "start": [0, 0],
+        "end": [0, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_2",
+        "start": [0, 0],
+        "end": [5, 0],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_3",
+        "start": [0, 4],
+        "end": [5, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_4",
+        "start": [5, 0],
+        "end": [5, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      }
+    ],
+    "openings": [
+      {
+        "id": "door_entry",
+        "type": "door",
+        "wall_id": "wall_2",
+        "offset_m": 2.05,
+        "width_m": 0.9,
+        "height_m": 2.1,
+        "sill_m": 0
+      },
+      {
+        "id": "window_wall_1",
+        "type": "window",
+        "wall_id": "wall_1",
+        "offset_m": 1.4,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      },
+      {
+        "id": "window_wall_3",
+        "type": "window",
+        "wall_id": "wall_3",
+        "offset_m": 1.9,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      },
+      {
+        "id": "window_wall_4",
+        "type": "window",
+        "wall_id": "wall_4",
+        "offset_m": 1.4,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      }
+    ],
+    "furniture": [
+      {
+        "id": "furniture_dacffcc89dce",
+        "product_id": "sample_bed",
+        "room_id": "room_1",
+        "position": [0.2, 0.2],
+        "rotation_deg": 0,
+        "requirement_id": null,
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": null,
+        "wood_color": null
+      },
+      {
+        "id": "furniture_64b3cd4ef540",
+        "product_id": "nightstand",
+        "room_id": "room_1",
+        "position": [0.2, 2.4],
+        "rotation_deg": 0,
+        "requirement_id": null,
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": null,
+        "wood_color": null
+      },
+      {
+        "id": "furniture_a1c084ac0e97",
+        "product_id": "bed_lamp",
+        "room_id": "room_1",
+        "position": [0.2, 3],
+        "rotation_deg": 0,
+        "requirement_id": null,
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": null,
+        "wood_color": null
+      },
+      {
+        "id": "furniture_ce36efe61058",
+        "product_id": "wardrobe",
+        "room_id": "room_1",
+        "position": [0.6, 3],
+        "rotation_deg": 0,
+        "requirement_id": null,
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": null,
+        "wood_color": null
+      }
+    ],
+    "materials": [],
+    "notes": [
+      "Rectangular layout on a 0.1 m grid. Areas use wall centre lines; collision checks include actual wall thickness.",
+      "Shared-wall doors connect rooms to an exterior entrance. Circulation uses declared design assumptions, not legal building rules.",
+      "Generated from the explicit room list."
+    ],
+    "design_assumptions": {
+      "min_door_width_m": 0.75,
+      "min_door_height_m": 2,
+      "circulation_width_m": 0.6,
+      "door_approach_m": 0.6
+    },
+    "design_brief": null,
+    "design_trace": []
+  },
+  "validation": {
+    "valid": true,
+    "issues": [
+      {
+        "code": "concept_only",
+        "message": "Access is checked under configurable design assumptions. Services and building regulations are not evaluated.",
+        "severity": "warning",
+        "object_id": null,
+        "related_object_ids": []
+      },
+      {
+        "code": "sample_catalogue",
+        "message": "Catalogue prices are illustrative; delivery, installation, and unselected finishes are excluded.",
+        "severity": "warning",
+        "object_id": null,
+        "related_object_ids": []
+      }
+    ],
+    "total_mad": 7200,
+    "sample_prices": true,
+    "furniture_total_mad": 7200,
+    "materials_total_mad": 0,
+    "completeness": null
+  },
+  "camera": [5.134689926173559, 8.175271323105084, 7.335271323105085],
+  "viewport": {
+    "x": 257,
+    "y": 298,
+    "width": 1295,
+    "height": 612.625
+  }
+}

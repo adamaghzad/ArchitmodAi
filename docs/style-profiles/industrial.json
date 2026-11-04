@@ -1,0 +1,1186 @@
+{
+  "scene": {
+    "id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+    "units": "m",
+    "width_m": 5,
+    "depth_m": 4,
+    "scale_confirmed": true,
+    "style": "Industrial",
+    "budget_mad": 30000,
+    "rooms": [
+      {
+        "id": "room_1",
+        "type": "bedroom",
+        "name": "Bedroom 01",
+        "polygon": [
+          [0, 0],
+          [5, 0],
+          [5, 4],
+          [0, 4]
+        ],
+        "color": "#a6aaa0",
+        "provenance": "ai_generated"
+      }
+    ],
+    "walls": [
+      {
+        "id": "wall_1",
+        "start": [0, 0],
+        "end": [0, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_2",
+        "start": [0, 0],
+        "end": [5, 0],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_3",
+        "start": [0, 4],
+        "end": [5, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      },
+      {
+        "id": "wall_4",
+        "start": [5, 0],
+        "end": [5, 4],
+        "thickness": 0.15,
+        "height": 2.8
+      }
+    ],
+    "openings": [
+      {
+        "id": "door_entry",
+        "type": "door",
+        "wall_id": "wall_2",
+        "offset_m": 2.05,
+        "width_m": 0.9,
+        "height_m": 2.1,
+        "sill_m": 0
+      },
+      {
+        "id": "window_wall_1",
+        "type": "window",
+        "wall_id": "wall_1",
+        "offset_m": 1.4,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      },
+      {
+        "id": "window_wall_3",
+        "type": "window",
+        "wall_id": "wall_3",
+        "offset_m": 1.9,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      },
+      {
+        "id": "window_wall_4",
+        "type": "window",
+        "wall_id": "wall_4",
+        "offset_m": 1.4,
+        "width_m": 1.2,
+        "height_m": 1.2,
+        "sill_m": 0.9
+      }
+    ],
+    "furniture": [
+      {
+        "id": "furniture_0302c1a13a69",
+        "product_id": "queen_bed",
+        "room_id": "room_1",
+        "position": [3.4000000000000004, 3.865],
+        "rotation_deg": 180,
+        "requirement_id": "room_1:bed",
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": "#6d7472",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      },
+      {
+        "id": "furniture_bb07e37dd851",
+        "product_id": "wardrobe",
+        "room_id": "room_1",
+        "position": [1.385, 3.865],
+        "rotation_deg": 180,
+        "requirement_id": "room_1:wardrobe",
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": "#6d7472",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      },
+      {
+        "id": "furniture_e2ea039d3113",
+        "product_id": "nightstand",
+        "room_id": "room_1",
+        "position": [3.9700000000000006, 3.8249999999999997],
+        "rotation_deg": 180,
+        "requirement_id": "room_1:bedside_table",
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": "#6d7472",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      },
+      {
+        "id": "furniture_23db405059ad",
+        "product_id": "open_shelf",
+        "room_id": "room_1",
+        "position": [4.865, 1.635],
+        "rotation_deg": 90,
+        "requirement_id": "room_1:bookshelf",
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": "#6d7472",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      },
+      {
+        "id": "furniture_010137264277",
+        "product_id": "desk_lamp",
+        "room_id": "room_1",
+        "position": [3.6350000000000007, 3.515],
+        "rotation_deg": 0,
+        "requirement_id": "room_1:lamp",
+        "support_id": "furniture_e2ea039d3113",
+        "elevation_m": 0.5,
+        "fabric_color": "#6d7472",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      },
+      {
+        "id": "furniture_0eecdf2928dc",
+        "product_id": "small_rug",
+        "room_id": "room_1",
+        "position": [1.9000000000000004, 1.4150000000000005],
+        "rotation_deg": 0,
+        "requirement_id": "room_1:rug",
+        "support_id": null,
+        "elevation_m": 0,
+        "fabric_color": "#ab795f",
+        "wood_color": "#795d46",
+        "light_color": "#ffe3b7"
+      }
+    ],
+    "materials": [
+      {
+        "id": "material_0f396de9f0df",
+        "product_id": "grey_floor",
+        "room_id": "room_1",
+        "surface": "floor",
+        "area_m2": 20,
+        "waste_fraction": 0.1,
+        "units": 16
+      },
+      {
+        "id": "material_6ce1521a4797",
+        "product_id": "clay_paint",
+        "room_id": "room_1",
+        "surface": "walls",
+        "area_m2": 44.19,
+        "waste_fraction": 0.1,
+        "units": 4
+      }
+    ],
+    "notes": [
+      "Rectangular layout on a 0.1 m grid. Areas use wall centre lines; collision checks include actual wall thickness.",
+      "Shared-wall doors connect rooms to an exterior entrance. Circulation uses declared design assumptions, not legal building rules.",
+      "Generated from the explicit room list."
+    ],
+    "design_assumptions": {
+      "min_door_width_m": 0.75,
+      "min_door_height_m": 2,
+      "circulation_width_m": 0.6,
+      "door_approach_m": 0.6
+    },
+    "design_brief": {
+      "prompt": "",
+      "furniture": [],
+      "palette": [],
+      "materials": [],
+      "profile_id": "industrial",
+      "profile_revision": 1,
+      "template_furniture": [
+        {
+          "role": "bed",
+          "name": "Double bed",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "essential",
+          "origin": "template"
+        },
+        {
+          "role": "wardrobe",
+          "name": "Wardrobe",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "essential",
+          "origin": "template"
+        },
+        {
+          "role": "bedside_table",
+          "name": "Bedside table",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "desired",
+          "origin": "template"
+        },
+        {
+          "role": "bookshelf",
+          "name": "Bookshelf",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "desired",
+          "origin": "template"
+        },
+        {
+          "role": "lamp",
+          "name": "Lamp",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "desired",
+          "origin": "template"
+        },
+        {
+          "role": "rug",
+          "name": "Rug",
+          "quantity": 1,
+          "room_type": "bedroom",
+          "priority": "optional",
+          "origin": "template"
+        }
+      ],
+      "excluded_roles": []
+    },
+    "design_trace": [
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:bed",
+        "room_id": "room_1",
+        "requested": "Double bed",
+        "quantity": 1,
+        "priority": "essential"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:wardrobe",
+        "room_id": "room_1",
+        "requested": "Wardrobe",
+        "quantity": 1,
+        "priority": "essential"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:bedside_table",
+        "room_id": "room_1",
+        "requested": "Bedside table",
+        "quantity": 1,
+        "priority": "desired"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:bookshelf",
+        "room_id": "room_1",
+        "requested": "Bookshelf",
+        "quantity": 1,
+        "priority": "desired"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:lamp",
+        "room_id": "room_1",
+        "requested": "Lamp",
+        "quantity": 1,
+        "priority": "desired"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "requirements",
+        "requirement_id": "room_1:rug",
+        "room_id": "room_1",
+        "requested": "Rug",
+        "quantity": 1,
+        "priority": "optional"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "profile_retrieval",
+        "room_id": "room_1",
+        "room_type": "bedroom",
+        "profile_id": "industrial",
+        "profile_revision": 1,
+        "semantic": {
+          "status": "disabled",
+          "model": "embeddinggemma:latest",
+          "reason": "Deterministic/offline ranking requested; semantic score omitted."
+        },
+        "ranking": [
+          {
+            "product_id": "clay_paint",
+            "score": 0.994,
+            "components": {
+              "style": 1,
+              "dimensions": 1,
+              "budget": 0.968,
+              "semantic": 0
+            },
+            "estimated_mad": 960
+          },
+          {
+            "product_id": "grey_floor",
+            "score": 0.982,
+            "components": {
+              "style": 1,
+              "dimensions": 1,
+              "budget": 0.904,
+              "semantic": 0
+            },
+            "estimated_mad": 2880
+          },
+          {
+            "product_id": "wall_panel",
+            "score": 0.8205,
+            "components": {
+              "style": 0.9,
+              "dimensions": 1,
+              "budget": 0.342667,
+              "semantic": 0
+            },
+            "estimated_mad": 19720
+          },
+          {
+            "product_id": "desk_lamp",
+            "score": 0.800002,
+            "components": {
+              "style": 0.65,
+              "dimensions": 0.997257,
+              "budget": 0.987,
+              "semantic": 0
+            },
+            "estimated_mad": 390
+          },
+          {
+            "product_id": "nightstand",
+            "score": 0.797137,
+            "components": {
+              "style": 0.65,
+              "dimensions": 0.989798,
+              "budget": 0.981667,
+              "semantic": 0
+            },
+            "estimated_mad": 550
+          },
+          {
+            "product_id": "open_shelf",
+            "score": 0.793845,
+            "components": {
+              "style": 0.65,
+              "dimensions": 0.98413,
+              "budget": 0.971667,
+              "semantic": 0
+            },
+            "estimated_mad": 850
+          },
+          {
+            "product_id": "queen_bed",
+            "score": 0.723312,
+            "components": {
+              "style": 0.65,
+              "dimensions": 0.78575,
+              "budget": 0.86,
+              "semantic": 0
+            },
+            "estimated_mad": 4200
+          },
+          {
+            "product_id": "white_nightstand",
+            "score": 0.621159,
+            "components": {
+              "style": 0.335,
+              "dimensions": 0.991385,
+              "budget": 0.986,
+              "semantic": 0
+            },
+            "estimated_mad": 420
+          },
+          {
+            "product_id": "bench",
+            "score": 0.614765,
+            "components": {
+              "style": 0.335,
+              "dimensions": 0.975061,
+              "budget": 0.973667,
+              "semantic": 0
+            },
+            "estimated_mad": 790
+          },
+          {
+            "product_id": "dressing_vanity",
+            "score": 0.609561,
+            "components": {
+              "style": 0.335,
+              "dimensions": 0.974494,
+              "budget": 0.946667,
+              "semantic": 0
+            },
+            "estimated_mad": 1600
+          },
+          {
+            "product_id": "wardrobe",
+            "score": 0.60306,
+            "components": {
+              "style": 0.335,
+              "dimensions": 0.965992,
+              "budget": 0.923333,
+              "semantic": 0
+            },
+            "estimated_mad": 2300
+          },
+          {
+            "product_id": "bookcase",
+            "score": 0.591553,
+            "components": {
+              "style": 0.29,
+              "dimensions": 0.988211,
+              "budget": 0.967333,
+              "semantic": 0
+            },
+            "estimated_mad": 980
+          },
+          {
+            "product_id": "potted_plant",
+            "score": 0.509952,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.993057,
+              "budget": 0.990667,
+              "semantic": 0
+            },
+            "estimated_mad": 280
+          },
+          {
+            "product_id": "white_paint",
+            "score": 0.509938,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.981333,
+              "semantic": 0
+            },
+            "estimated_mad": 560
+          },
+          {
+            "product_id": "bed_lamp",
+            "score": 0.509739,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.996457,
+              "budget": 0.985,
+              "semantic": 0
+            },
+            "estimated_mad": 450
+          },
+          {
+            "product_id": "warm_paint",
+            "score": 0.509437,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.978667,
+              "semantic": 0
+            },
+            "estimated_mad": 640
+          },
+          {
+            "product_id": "sage_paint",
+            "score": 0.509062,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.976667,
+              "semantic": 0
+            },
+            "estimated_mad": 700
+          },
+          {
+            "product_id": "floor_lamp",
+            "score": 0.507452,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.993057,
+              "budget": 0.977333,
+              "semantic": 0
+            },
+            "estimated_mad": 680
+          },
+          {
+            "product_id": "vinyl_floor",
+            "score": 0.50125,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.935,
+              "semantic": 0
+            },
+            "estimated_mad": 1950
+          },
+          {
+            "product_id": "light_floor",
+            "score": 0.497688,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.916,
+              "semantic": 0
+            },
+            "estimated_mad": 2520
+          },
+          {
+            "product_id": "pastel_oak_floor",
+            "score": 0.497688,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.916,
+              "semantic": 0
+            },
+            "estimated_mad": 2520
+          },
+          {
+            "product_id": "sand_floor",
+            "score": 0.496938,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.912,
+              "semantic": 0
+            },
+            "estimated_mad": 2640
+          },
+          {
+            "product_id": "fabric_chair",
+            "score": 0.495148,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.966842,
+              "budget": 0.946667,
+              "semantic": 0
+            },
+            "estimated_mad": 1600
+          },
+          {
+            "product_id": "bath_floor",
+            "score": 0.494406,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.8985,
+              "semantic": 0
+            },
+            "estimated_mad": 3045
+          },
+          {
+            "product_id": "oak_floor",
+            "score": 0.493937,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.896,
+              "semantic": 0
+            },
+            "estimated_mad": 3120
+          },
+          {
+            "product_id": "small_rug",
+            "score": 0.47983,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.877571,
+              "budget": 0.984,
+              "semantic": 0
+            },
+            "estimated_mad": 480
+          },
+          {
+            "product_id": "single_bed",
+            "score": 0.475264,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.892308,
+              "budget": 0.94,
+              "semantic": 0
+            },
+            "estimated_mad": 1800
+          },
+          {
+            "product_id": "wall_tile",
+            "score": 0.463125,
+            "components": {
+              "style": 0.135,
+              "dimensions": 1,
+              "budget": 0.731667,
+              "semantic": 0
+            },
+            "estimated_mad": 8050
+          },
+          {
+            "product_id": "compact_bed",
+            "score": 0.457878,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.845264,
+              "budget": 0.91,
+              "semantic": 0
+            },
+            "estimated_mad": 2700
+          },
+          {
+            "product_id": "pastel_double_bed",
+            "score": 0.441451,
+            "components": {
+              "style": 0.135,
+              "dimensions": 0.809555,
+              "budget": 0.87,
+              "semantic": 0
+            },
+            "estimated_mad": 3900
+          },
+          {
+            "product_id": "sample_bed",
+            "score": 0.418406,
+            "components": {
+              "style": 0.09,
+              "dimensions": 0.818624,
+              "budget": 0.87,
+              "semantic": 0
+            },
+            "estimated_mad": 3900
+          }
+        ]
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:bed",
+        "instance": 1,
+        "requested": "Double bed",
+        "product_id": "queen_bed",
+        "object_id": "furniture_0302c1a13a69",
+        "position": [3.4000000000000004, 3.865],
+        "elevation_m": 0,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:wardrobe",
+        "instance": 1,
+        "requested": "Wardrobe",
+        "product_id": "wardrobe",
+        "object_id": "furniture_bb07e37dd851",
+        "position": [1.385, 3.865],
+        "elevation_m": 0,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:bedside_table",
+        "instance": 1,
+        "requested": "Bedside table",
+        "product_id": "nightstand",
+        "object_id": "furniture_e2ea039d3113",
+        "position": [3.9700000000000006, 3.8249999999999997],
+        "elevation_m": 0,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:bookshelf",
+        "instance": 1,
+        "requested": "Bookshelf",
+        "product_id": "open_shelf",
+        "object_id": "furniture_23db405059ad",
+        "position": [4.865, 1.635],
+        "elevation_m": 0,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:lamp",
+        "instance": 1,
+        "requested": "Lamp",
+        "product_id": "desk_lamp",
+        "object_id": "furniture_010137264277",
+        "position": [3.6350000000000007, 3.515],
+        "elevation_m": 0.5,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "placement",
+        "requirement_id": "room_1:rug",
+        "instance": 1,
+        "requested": "Rug",
+        "product_id": "small_rug",
+        "object_id": "furniture_0eecdf2928dc",
+        "position": [1.9000000000000004, 1.4150000000000005],
+        "elevation_m": 0,
+        "status": "placed",
+        "reason": null,
+        "attempt": 0
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "materials",
+        "room_id": "room_1",
+        "product_id": "grey_floor",
+        "surface": "floor",
+        "units": 16,
+        "subtotal_mad": 2880,
+        "status": "applied",
+        "reason": null
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "materials",
+        "room_id": "room_1",
+        "product_id": "clay_paint",
+        "surface": "walls",
+        "units": 4,
+        "subtotal_mad": 960,
+        "status": "applied",
+        "reason": null
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:bed",
+        "object_ids": ["furniture_0302c1a13a69"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:wardrobe",
+        "object_ids": ["furniture_bb07e37dd851"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:bedside_table",
+        "object_ids": ["furniture_e2ea039d3113"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:bookshelf",
+        "object_ids": ["furniture_23db405059ad"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:lamp",
+        "object_ids": ["furniture_010137264277"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      },
+      {
+        "event": "design_pipeline",
+        "scene_id": "c11f2c9d-11d1-419d-a5d1-4e42bcb773fa",
+        "stage": "validation",
+        "requirement_id": "room_1:rug",
+        "object_ids": ["furniture_0eecdf2928dc"],
+        "status": "valid",
+        "requested": 1,
+        "placed": 1,
+        "rendering_status": "awaiting_viewport_audit"
+      }
+    ]
+  },
+  "report": {
+    "valid": true,
+    "issues": [
+      {
+        "code": "concept_only",
+        "message": "Access is checked under configurable design assumptions. Services and building regulations are not evaluated.",
+        "severity": "warning",
+        "object_id": null,
+        "related_object_ids": []
+      },
+      {
+        "code": "sample_catalogue",
+        "message": "Catalogue prices are illustrative; delivery, installation, and unselected finishes are excluded.",
+        "severity": "warning",
+        "object_id": null,
+        "related_object_ids": []
+      }
+    ],
+    "total_mad": 12610,
+    "sample_prices": true,
+    "furniture_total_mad": 8770,
+    "materials_total_mad": 3840,
+    "completeness": {
+      "complete": true,
+      "items": [
+        {
+          "requirement_id": "room_1:bed",
+          "room_id": "room_1",
+          "name": "Double bed",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_0302c1a13a69"],
+          "product_ids": ["queen_bed"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "essential"
+        },
+        {
+          "requirement_id": "room_1:wardrobe",
+          "room_id": "room_1",
+          "name": "Wardrobe",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_bb07e37dd851"],
+          "product_ids": ["wardrobe"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "essential"
+        },
+        {
+          "requirement_id": "room_1:bedside_table",
+          "room_id": "room_1",
+          "name": "Bedside table",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_e2ea039d3113"],
+          "product_ids": ["nightstand"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:bookshelf",
+          "room_id": "room_1",
+          "name": "Bookshelf",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_23db405059ad"],
+          "product_ids": ["open_shelf"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:lamp",
+          "room_id": "room_1",
+          "name": "Lamp",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_010137264277"],
+          "product_ids": ["desk_lamp"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:rug",
+          "room_id": "room_1",
+          "name": "Rug",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_0eecdf2928dc"],
+          "product_ids": ["small_rug"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "optional"
+        }
+      ],
+      "requested_count": 6,
+      "placed_count": 6,
+      "correction_attempts": 0,
+      "material_requirements": [],
+      "budget_mad": 30000,
+      "total_mad": 12610,
+      "within_budget": true,
+      "geometry_valid": true,
+      "geometry_errors": [],
+      "profile_id": "industrial",
+      "user_requirements_complete": true,
+      "template_items": [
+        {
+          "requirement_id": "room_1:bed",
+          "room_id": "room_1",
+          "name": "Double bed",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_0302c1a13a69"],
+          "product_ids": ["queen_bed"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "essential"
+        },
+        {
+          "requirement_id": "room_1:wardrobe",
+          "room_id": "room_1",
+          "name": "Wardrobe",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_bb07e37dd851"],
+          "product_ids": ["wardrobe"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "essential"
+        },
+        {
+          "requirement_id": "room_1:bedside_table",
+          "room_id": "room_1",
+          "name": "Bedside table",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_e2ea039d3113"],
+          "product_ids": ["nightstand"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:bookshelf",
+          "room_id": "room_1",
+          "name": "Bookshelf",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_23db405059ad"],
+          "product_ids": ["open_shelf"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:lamp",
+          "room_id": "room_1",
+          "name": "Lamp",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_010137264277"],
+          "product_ids": ["desk_lamp"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "desired"
+        },
+        {
+          "requirement_id": "room_1:rug",
+          "room_id": "room_1",
+          "name": "Rug",
+          "requested": 1,
+          "placed": 1,
+          "object_ids": ["furniture_0eecdf2928dc"],
+          "product_ids": ["small_rug"],
+          "reason": null,
+          "validation_status": "valid",
+          "rendering_status": "awaiting_viewport_audit",
+          "origin": "template",
+          "priority": "optional"
+        }
+      ],
+      "style_preferences": [
+        {
+          "preference": "metal",
+          "satisfied": true,
+          "reason": "Represented in selected catalogue materials."
+        },
+        {
+          "preference": "wood",
+          "satisfied": true,
+          "reason": "Represented in selected catalogue materials."
+        },
+        {
+          "preference": "oak",
+          "satisfied": true,
+          "reason": "Represented in selected catalogue materials."
+        },
+        {
+          "preference": "concrete",
+          "satisfied": false,
+          "reason": "Preferred material not represented by eligible selected catalogue products; this is a soft style preference."
+        },
+        {
+          "preference": "glass",
+          "satisfied": false,
+          "reason": "Preferred material not represented by eligible selected catalogue products; this is a soft style preference."
+        },
+        {
+          "preference": "leather",
+          "satisfied": false,
+          "reason": "Preferred material not represented by eligible selected catalogue products; this is a soft style preference."
+        },
+        {
+          "preference": "lighting",
+          "satisfied": true,
+          "reason": "Profile suggests 3000 K with daylight and local task lighting; no lighting objects are invented."
+        },
+        {
+          "preference": "base palette: warm grey (#b7b3a9)",
+          "satisfied": false,
+          "reason": "Exact profile colour is not represented; explicit user choices and eligible catalogue finishes take precedence."
+        },
+        {
+          "preference": "wood palette: dark timber (#795d46)",
+          "satisfied": true,
+          "reason": "Applied to furniture tints or a catalogue surface."
+        },
+        {
+          "preference": "fabric palette: charcoal cloth (#6d7472)",
+          "satisfied": true,
+          "reason": "Applied to furniture tints or a catalogue surface."
+        },
+        {
+          "preference": "accent palette: rust (#ab795f)",
+          "satisfied": true,
+          "reason": "Applied to furniture tints or a catalogue surface."
+        }
+      ]
+    }
+  },
+  "audit": [
+    {
+      "id": "furniture_0302c1a13a69",
+      "productId": "queen_bed",
+      "status": "rendered",
+      "assetStatus": "procedural",
+      "meshes": 11,
+      "colors": ["#6d7472", "#795d46", "#c2b292", "#ece8db", "#f4f0e4"]
+    },
+    {
+      "id": "furniture_bb07e37dd851",
+      "productId": "wardrobe",
+      "status": "rendered",
+      "assetStatus": "licensed",
+      "meshes": 5,
+      "colors": ["#232624", "#795d46", "#9b845f", "#b3b8ba", "#ffffff"]
+    },
+    {
+      "id": "furniture_e2ea039d3113",
+      "productId": "nightstand",
+      "status": "rendered",
+      "assetStatus": "procedural",
+      "meshes": 5,
+      "colors": ["#795d46"]
+    },
+    {
+      "id": "furniture_23db405059ad",
+      "productId": "open_shelf",
+      "status": "rendered",
+      "assetStatus": "procedural",
+      "meshes": 49,
+      "colors": [
+        "#657563",
+        "#795d46",
+        "#b48b6b",
+        "#b5ac94",
+        "#c7bca6",
+        "#e4decf"
+      ]
+    },
+    {
+      "id": "furniture_010137264277",
+      "productId": "desk_lamp",
+      "status": "rendered",
+      "assetStatus": "procedural",
+      "meshes": 4,
+      "colors": ["#a28c5d", "#ede0be", "#ffe6b0"]
+    },
+    {
+      "id": "furniture_0eecdf2928dc",
+      "productId": "small_rug",
+      "status": "rendered",
+      "assetStatus": "procedural",
+      "meshes": 49,
+      "colors": ["#ab795f", "#dfd9c5"]
+    }
+  ]
+}
