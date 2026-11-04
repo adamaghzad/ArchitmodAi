@@ -9,14 +9,15 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from PIL import Image, UnidentifiedImageError
-from pydantic import ValidationError
 
+from .agent_design import instruction_workflow
 from .catalog import catalogue_records
 from .geometry import validate_scene
 from .inference import InferenceError
 from .marketplace_api import marketplace_router
-from .materials import refresh_quantities
 from .models import (
+    AgentInstructionRequest,
+    AgentProposal,
     CreateProject,
     EditRequest,
     FurnishRequest,
@@ -29,6 +30,7 @@ from .models import (
     TraceRequest,
     UpdateBriefRequest,
 )
+from .operations import apply_operations
 from .planner import PlanningError, build_walls, solve_layout
 from .settings import model_for
 from .store import ConflictError, ProjectStore
@@ -138,54 +140,47 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def edit_scene(project_id: str, request: EditRequest):
         project = current(project_id, request.expected_revision)
         scene = scene_for(project)
-        found = False
-        for item in scene.furniture:
-            if item.id != request.object_id:
-                continue
-            if request.type == "move_furniture" and request.position is not None:
-                item.position = request.position
-                if request.rotation_deg is not None:
-                    item.rotation_deg = request.rotation_deg
-                found = True
-            elif request.type == "delete_furniture":
-                scene.furniture = [old for old in scene.furniture if old.id != item.id]
-                found = True
-            break
-        for wall in scene.walls:
-            if wall.id == request.object_id and request.type == "update_wall":
-                if request.start is not None and request.end is not None:
-                    wall.start, wall.end = request.start, request.end
-                    found = True
-                if request.height is not None:
-                    wall.height = request.height
-                    found = True
-                if request.thickness is not None:
-                    wall.thickness = request.thickness
-                    found = True
-                break
-        for opening in scene.openings:
-            if opening.id == request.object_id and request.type == "update_opening":
-                for field in ("offset_m", "width_m", "height_m", "sill_m"):
-                    value = getattr(request, field)
-                    if value is not None:
-                        setattr(opening, field, value)
-                        found = True
-                break
-        for room in scene.rooms:
-            if room.id == request.object_id and request.type == "set_material" and request.color:
-                room.color = request.color
-                room.provenance = "user_corrected"
-                found = True
-                break
-        if not found:
-            raise HTTPException(422, "Operation needs a matching object and all required fields.")
-        try:
-            scene = Scene.model_validate(scene.model_dump())
-        except ValidationError as exc:
-            raise HTTPException(422, "The operation contains invalid scene values.") from exc
-        refresh_quantities(scene)
+        scene = apply_operations(scene, [request])
         project.candidate_scene = scene
+        project.agent_proposal = None
         project.report = validate_scene(scene)
+        return store.save(project, request.expected_revision)
+
+    @app.post("/api/projects/{project_id}/agent-instructions", response_model=Project)
+    def agent_instruction(project_id: str, request: AgentInstructionRequest):
+        project = current(project_id, request.expected_revision)
+        if project.agent_proposal is not None:
+            raise HTTPException(
+                409, "Approve or reject the current AI proposal before requesting another."
+            )
+        scene = scene_for(project)
+        if request.room_id and not any(room.id == request.room_id for room in scene.rooms):
+            raise HTTPException(422, "The selected room does not exist.")
+        result = instruction_workflow.invoke({"scene": scene, "request": request})
+        project.agent_proposal = AgentProposal(
+            instruction=request.instruction,
+            explanation=result["explanation"],
+            operations=result["operations"],
+            base_scene=scene,
+            base_was_candidate=project.candidate_scene is not None,
+            before_total_mad=validate_scene(scene).total_mad,
+            after_total_mad=result["report"].total_mad,
+        )
+        project.candidate_scene, project.report = result["candidate"], result["report"]
+        project.recommendations = []
+        return store.save(project, request.expected_revision)
+
+    @app.post("/api/projects/{project_id}/agent-proposal/reject", response_model=Project)
+    def reject_agent_proposal(project_id: str, request: RevisionRequest):
+        project = current(project_id, request.expected_revision)
+        proposal = project.agent_proposal
+        if proposal is None:
+            raise HTTPException(422, "There is no pending AI proposal.")
+        project.candidate_scene = proposal.base_scene if proposal.base_was_candidate else None
+        project.agent_proposal = None
+        scene = project.candidate_scene or project.committed_scene
+        project.report = validate_scene(scene) if scene else None
+        project.recommendations = []
         return store.save(project, request.expected_revision)
 
     @app.post("/api/projects/{project_id}/validate")
@@ -200,6 +195,9 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         project = current(project_id, request.expected_revision)
         scene = scene_for(project)
         scene.budget_mad, scene.style = request.budget_mad, request.style
+        if request.design_assumptions is not None:
+            scene.design_assumptions = request.design_assumptions
+        project.agent_proposal = None
         project.candidate_scene, project.report = scene, validate_scene(scene)
         project.recommendations = []
         return store.save(project, request.expected_revision)
@@ -211,6 +209,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
             raise HTTPException(422, "No draft changes to undo.")
         project.redo_stack = [*project.redo_stack, project.candidate_scene][-20:]
         project.candidate_scene = project.undo_stack.pop()
+        project.agent_proposal = None
         scene = project.candidate_scene or project.committed_scene
         project.report = validate_scene(scene) if scene else None
         project.recommendations = []
@@ -223,6 +222,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
             raise HTTPException(422, "No draft changes to redo.")
         project.undo_stack = [*project.undo_stack, project.candidate_scene][-20:]
         project.candidate_scene = project.redo_stack.pop()
+        project.agent_proposal = None
         scene = project.candidate_scene or project.committed_scene
         project.report = validate_scene(scene) if scene else None
         project.recommendations = []
@@ -241,6 +241,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         if snapshot is None:
             raise HTTPException(404, "Saved scene not found.")
         project.candidate_scene = Scene.model_validate(snapshot["scene"])
+        project.agent_proposal = None
         project.report = validate_scene(project.candidate_scene)
         project.recommendations = []
         return store.save(project, request.expected_revision)
@@ -256,7 +257,9 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
                 422, "This draft has validation errors. Resolve them before approval."
             )
         project.committed_scene = project.candidate_scene
+        project.agent_proposal = None
         project.candidate_scene = None
+        project.agent_proposal = None
         project.report = report
         return store.save(project, request.expected_revision)
 
