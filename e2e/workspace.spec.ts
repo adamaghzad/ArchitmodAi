@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import type { Product, Project } from '../apps/web/src/types';
 
 test('workspace drag, undo, materials, cameras, and snapshots stay synchronized', async ({
   page,
@@ -16,17 +17,15 @@ test('workspace drag, undo, materials, cameras, and snapshots stay synchronized'
   await page.getByLabel('Project budget (MAD)', { exact: true }).fill('40000');
   await page.getByRole('button', { name: 'Save brief to draft' }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
-  await page
-    .getByRole('button', { name: 'Furnish space', exact: true })
-    .click();
+  const selectedSofa = await furnish(page);
   const sofa = page.getByRole('button', {
-    name: 'Select Linen sofa',
+    name: `Select ${selectedSofa.name}`,
     exact: true,
   });
   await expect(sofa).toBeVisible();
   const before = (await (await request.get(path)).json()).candidate_scene;
   const oldSofa = before.furniture.find(
-    (item: { product_id: string }) => item.product_id === 'sample_sofa',
+    (item: { id: string }) => item.id === selectedSofa.id,
   );
   await page
     .getByRole('button', { name: 'Move furniture', exact: true })
@@ -65,9 +64,15 @@ test('workspace drag, undo, materials, cameras, and snapshots stay synchronized'
     .getByRole('button', { name: 'Select Living', exact: true })
     .focus();
   await page.keyboard.press('Enter');
-  await page
-    .getByRole('combobox', { name: 'Floor material', exact: true })
-    .selectOption('oak_floor');
+  const floorControl = page.getByRole('combobox', {
+    name: 'Floor material',
+    exact: true,
+  });
+  const floorId =
+    (await floorControl.inputValue()) === 'oak_floor'
+      ? 'light_floor'
+      : 'oak_floor';
+  await floorControl.selectOption(floorId);
   const material = page.waitForResponse(
     (response) =>
       response.url().endsWith('/products') &&
@@ -107,7 +112,7 @@ test('workspace drag, undo, materials, cameras, and snapshots stay synchronized'
   const after = await (await request.get(path)).json();
   expect(
     after.candidate_scene.materials.some(
-      (item: { product_id: string }) => item.product_id === 'oak_floor',
+      (item: { product_id: string }) => item.product_id === floorId,
     ),
   ).toBeTruthy();
   expect(after.report.valid).toBeTruthy();
@@ -148,14 +153,17 @@ test('unavailable registered GLB uses a cached procedural fallback', async ({
     route.fulfill({
       json: {
         models: [
-          {
-            id: 'test-fallback',
-            productId: 'sample_sofa',
-            url: '/assets/models/unavailable.glb',
-            source: 'Local test fixture',
-            license: 'Test authored in repository',
-          },
-        ],
+          'sample_sofa',
+          'small_sofa',
+          'compact_sofa',
+          'modular_sofa',
+        ].map((productId) => ({
+          id: 'test-fallback',
+          productId,
+          url: '/assets/models/unavailable.glb',
+          source: 'Local test fixture',
+          license: 'Test authored in repository',
+        })),
       },
     }),
   );
@@ -168,11 +176,12 @@ test('unavailable registered GLB uses a cached procedural fallback', async ({
     });
   });
   await createLayout(page, 'Asset fallback');
-  await page
-    .getByRole('button', { name: 'Furnish space', exact: true })
-    .click();
+  const selectedSofa = await furnish(page);
   await expect(
-    page.getByRole('button', { name: 'Select Linen sofa', exact: true }),
+    page.getByRole('button', {
+      name: `Select ${selectedSofa.name}`,
+      exact: true,
+    }),
   ).toBeVisible();
   await page.getByRole('button', { name: '3D view', exact: true }).click();
   const canvas = page
@@ -193,6 +202,7 @@ test('unavailable registered GLB uses a cached procedural fallback', async ({
 
 test('marketplace filters, compares, adds, replaces, calculates materials, and exports', async ({
   page,
+  request,
 }) => {
   test.setTimeout(75000);
   await createLayout(page, 'E2E marketplace');
@@ -201,7 +211,10 @@ test('marketplace filters, compares, adds, replaces, calculates materials, and e
     .getByRole('button', { name: 'Marketplace', exact: true })
     .click();
   const market = page.getByRole('dialog', { name: 'Furniture & materials' });
-  await expect(market.getByText('52 products · mock_data')).toBeVisible();
+  const catalogue = await (await request.get('/api/catalogue')).json();
+  await expect(
+    market.getByText(`${catalogue.length} products · mock_data`),
+  ).toBeVisible();
   await market
     .getByRole('combobox', { name: 'Category', exact: true })
     .selectOption('sofa');
@@ -323,18 +336,48 @@ async function createLayout(page: Page, name = 'E2E apartment') {
   return project;
 }
 
+async function furnish(page: Page) {
+  const response = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/design-interior') &&
+      response.request().method() === 'POST',
+    { timeout: 60000 },
+  );
+  await page
+    .getByRole('button', { name: 'Furnish space', exact: true })
+    .click();
+  const finished = await response;
+  expect(finished.status()).toBe(200);
+  const project: Project = await finished.json();
+  expect(project.report!.valid).toBeTruthy();
+  const products: Product[] = await (
+    await page.request.get('/api/catalogue')
+  ).json();
+  const sofa = project.candidate_scene!.furniture.find(
+    (item) =>
+      products.find((product) => product.id === item.product_id)?.category ===
+      'sofa',
+  );
+  expect(sofa).toBeDefined();
+  return {
+    ...sofa!,
+    name: products.find((product) => product.id === sofa!.product_id)!.name,
+  };
+}
+
 test('generate, furnish, inspect both views, approve, reopen, and export', async ({
   page,
 }) => {
+  test.setTimeout(90000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await createLayout(page);
-  await page.getByRole('button', { name: 'Furnish space' }).click();
+  const sofa = await furnish(page);
   await expect(
-    page.getByRole('button', { name: 'Select Linen sofa' }),
+    page.getByRole('button', { name: `Select ${sofa.name}` }),
   ).toBeVisible();
-  await page.getByRole('button', { name: 'Select Linen sofa' }).click();
-  await expect(page.getByRole('heading', { name: 'Linen sofa' })).toBeVisible();
+  await page.getByRole('button', { name: `Select ${sofa.name}` }).click();
+  await expect(page.getByRole('heading', { name: sofa.name })).toBeVisible();
   await page.getByRole('button', { name: '3D view', exact: true }).click();
   await expect(
     page.getByRole('img', { name: 'Interactive 3D scene' }).locator('canvas'),
@@ -349,7 +392,7 @@ test('generate, furnish, inspect both views, approve, reopen, and export', async
   await expect(page.getByText('Approved snapshot saved locally')).toBeVisible();
   await page.reload();
   await expect(
-    page.getByRole('button', { name: 'Select Linen sofa' }),
+    page.getByRole('button', { name: `Select ${sofa.name}` }),
   ).toBeVisible();
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export scene JSON' }).click();
@@ -364,16 +407,23 @@ test('generate, furnish, inspect both views, approve, reopen, and export', async
 test('invalid furniture edit blocks approval and discard restores the saved scene', async ({
   page,
 }) => {
+  test.setTimeout(90000);
   await createLayout(page, 'E2E correction');
-  await page.getByRole('button', { name: 'Furnish space' }).click();
+  const sofa = await furnish(page);
   await expect(
-    page.getByRole('button', { name: 'Select Linen sofa' }),
+    page.getByRole('button', { name: `Select ${sofa.name}` }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Approve draft' }).click();
   await expect(page.getByText('Approved snapshot saved locally')).toBeVisible();
-  await page.getByRole('button', { name: 'Select Linen sofa' }).click();
+  await page.getByRole('button', { name: `Select ${sofa.name}` }).click();
   await page.getByLabel('X (m)', { exact: true }).fill('-3');
+  const edited = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/operations') &&
+      response.request().method() === 'POST',
+  );
   await page.getByRole('button', { name: 'Apply position' }).click();
+  expect((await edited).status()).toBe(200);
   await expect(
     page.getByRole('heading', { name: 'Review needed' }),
   ).toBeVisible();

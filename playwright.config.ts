@@ -35,7 +35,11 @@ export default defineConfig({
       command:
         'uv run --project backend uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8001',
       url: 'http://127.0.0.1:8001/api/health',
-      env: { ARCHAI_DATA_DIR: '.local/e2e', OLLAMA_REQUIREMENTS_MODEL: '' },
+      env: {
+        ARCHAI_DATA_DIR: '.local/e2e',
+        OLLAMA_REQUIREMENTS_MODEL: '',
+        ARCHAI_EMBEDDINGS_ENABLED: 'false',
+      },
       reuseExistingServer: false,
       timeout: 60000,
     },

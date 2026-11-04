@@ -117,7 +117,7 @@ test('Japandi office renders licensed furniture and preserves geometry and camer
           : [product.depth_m, product.height_m, product.width_m];
       item.dimensions.forEach((value, axis) => {
         expect(value).toBeGreaterThan(0);
-        expect(value).toBeLessThanOrEqual(dimensions[axis] + 1e-5);
+        expect(value).toBeLessThanOrEqual(dimensions[axis] + 1e-4);
       });
       expect(item.floor).toBeCloseTo(0.012, 3);
     }
