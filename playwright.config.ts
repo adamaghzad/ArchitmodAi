@@ -18,11 +18,14 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 1000 },
         launchOptions: {
-          args: [
-            '--use-gl=angle',
-            '--use-angle=swiftshader',
-            '--enable-unsafe-swiftshader',
-          ],
+          args:
+            process.env.ARCHAI_HARDWARE_RENDER === '1'
+              ? ['--use-angle=d3d11', '--force-high-performance-gpu']
+              : [
+                  '--use-gl=angle',
+                  '--use-angle=swiftshader',
+                  '--enable-unsafe-swiftshader',
+                ],
         },
       },
     },
