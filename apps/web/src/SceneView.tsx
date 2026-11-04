@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import {
-  Environment,
   GizmoHelper,
   GizmoViewcube,
   Grid,
-  Lightformer,
+  useProgress,
 } from '@react-three/drei';
 import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from 'three';
 import {
@@ -20,6 +19,10 @@ import {
 import Architecture from './editor3d/Architecture';
 import CameraRig from './editor3d/CameraRig';
 import FurnitureObject from './editor3d/FurnitureObject';
+import Daylight from './editor3d/Daylight';
+import RenderTelemetry from './editor3d/RenderTelemetry';
+import type { RenderProgress } from './editor3d/PathTracedRender';
+import { HIGH_QUALITY_SAMPLES } from './editor3d/renderSettings';
 import { MaterialProvider } from './editor3d/MaterialProvider';
 import { EMPTY_REGISTRY, parseRegistry } from './editor3d/assetRegistry';
 import { cameraPose } from './sceneGeometry';
@@ -43,6 +46,13 @@ const DEFAULT_SETTINGS: ViewSettings = {
   furniture: true,
 };
 const ignoreEdit = async () => {};
+const PathTracedRender = lazy(() => import('./editor3d/PathTracedRender'));
+const InteractiveEffects = lazy(() => import('./editor3d/InteractiveEffects'));
+
+function RasterRender() {
+  useFrame(({ gl, scene, camera }) => gl.render(scene, camera), 1);
+  return null;
+}
 
 export default function SceneView({
   scene,
@@ -55,11 +65,30 @@ export default function SceneView({
   settings = DEFAULT_SETTINGS,
 }: Props) {
   const [registry, setRegistry] = useState(EMPTY_REGISTRY);
+  const [registryReady, setRegistryReady] = useState(false);
   const [command, setCommand] = useState<CameraCommand>({
     action: 'isometric',
     serial: 0,
   });
   const [dragging, setDragging] = useState(false);
+  const [qualityScene, setQualityScene] = useState<Scene | null>(null);
+  const [qualitySettings, setQualitySettings] = useState<ViewSettings | null>(
+    null,
+  );
+  const [progress, setProgress] = useState<RenderProgress>({
+    phase: 'preparing',
+    progress: 0,
+    samples: 0,
+  });
+  const [contactDetail, setContactDetail] = useState(true);
+  const [benchmark, setBenchmark] = useState(0);
+  const [performanceReport, setPerformanceReport] = useState('');
+  const loading = useProgress();
+  const highQuality = qualityScene === scene && qualitySettings === settings;
+  const select = (id: string) => {
+    setQualityScene(null);
+    onSelect(id);
+  };
   useEffect(() => {
     let active = true;
     fetch('/assets/registry.json')
@@ -67,7 +96,10 @@ export default function SceneView({
       .then((data) => {
         if (active) setRegistry(parseRegistry(data));
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => {
+        if (active) setRegistryReady(true);
+      });
     return () => {
       active = false;
     };
@@ -102,6 +134,7 @@ export default function SceneView({
           gl={{
             antialias: true,
             alpha: false,
+            powerPreference: 'high-performance',
             toneMapping: ACESFilmicToneMapping,
             outputColorSpace: SRGBColorSpace,
           }}
@@ -116,11 +149,11 @@ export default function SceneView({
           }
         >
           <color attach="background" args={['#142019']} />
-          <hemisphereLight args={['#f2f2e5', '#636c52', 1.5]} />
-          <ambientLight intensity={0.32} />
+          <hemisphereLight args={['#eef3ff', '#b0a18a', 0.45]} />
+          <ambientLight intensity={0.08} />
           <directionalLight
             position={[-size * 0.5, size * 1.5, size * 0.3]}
-            intensity={3.2}
+            intensity={2.8}
             color="#fff3d8"
             castShadow
             shadow-mapSize={[2048, 2048]}
@@ -129,7 +162,7 @@ export default function SceneView({
             shadow-camera-top={size}
             shadow-camera-bottom={-size}
             shadow-camera-far={size * 5}
-            shadow-normalBias={0.035}
+            shadow-normalBias={0.012}
             shadow-bias={-0.0001}
             shadow-radius={3}
           />
@@ -138,29 +171,17 @@ export default function SceneView({
             intensity={0.65}
             color="#d8e4ef"
           />
-          <Environment resolution={128} frames={1}>
-            <Lightformer
-              form="rect"
-              intensity={2}
-              position={[0, 6, 0]}
-              rotation={[Math.PI / 2, 0, 0]}
-              scale={[12, 12, 1]}
-            />
-            <Lightformer
-              form="rect"
-              intensity={1.3}
-              position={[-6, 3, 2]}
-              rotation={[0, Math.PI / 2, 0]}
-              scale={[8, 6, 1]}
-            />
-          </Environment>
-          <MaterialProvider>
-            <group position={[-scene.width_m / 2, 0, -scene.depth_m / 2]}>
+          <Daylight asset={registry.environment} />
+          <MaterialProvider assets={registry.materials}>
+            <group
+              name="architectural-model"
+              position={[-scene.width_m / 2, 0, -scene.depth_m / 2]}
+            >
               <Architecture
                 scene={scene}
                 products={products}
                 selected={selected}
-                onSelect={onSelect}
+                onSelect={select}
                 settings={settings}
               />
               {settings.furniture &&
@@ -175,7 +196,7 @@ export default function SceneView({
                       registry={registry}
                       tool={tool}
                       busy={busy}
-                      onSelect={onSelect}
+                      onSelect={select}
                       onEdit={onEdit}
                       onDrag={setDragging}
                     />
@@ -202,7 +223,24 @@ export default function SceneView({
             enabled={!dragging}
             pan={tool === 'pan'}
           />
-          <GizmoHelper alignment="top-right" margin={[55, 62]}>
+          <RenderTelemetry
+            benchmark={benchmark}
+            onReport={setPerformanceReport}
+          />
+          <Suspense fallback={<RasterRender />}>
+            {highQuality ? (
+              <PathTracedRender onProgress={setProgress} />
+            ) : contactDetail ? (
+              <InteractiveEffects />
+            ) : (
+              <RasterRender />
+            )}
+          </Suspense>
+          <GizmoHelper
+            alignment="top-right"
+            margin={[55, 62]}
+            renderPriority={2}
+          >
             <GizmoViewcube
               color="#344932"
               hoverColor="#739558"
@@ -212,6 +250,69 @@ export default function SceneView({
             />
           </GizmoHelper>
         </Canvas>
+      </div>
+      <div className="render-toolbar" aria-label="Rendering controls">
+        <button
+          className={!highQuality ? 'active' : ''}
+          onClick={() => setQualityScene(null)}
+        >
+          Interactive
+        </button>
+        <button
+          className={highQuality ? 'active' : ''}
+          disabled={!registryReady || loading.active || dragging}
+          onClick={() => {
+            setQualityScene(scene);
+            setQualitySettings(settings);
+          }}
+        >
+          High quality
+        </button>
+        {highQuality ? (
+          <button onClick={() => setQualityScene(null)}>Cancel render</button>
+        ) : (
+          <label>
+            <input
+              type="checkbox"
+              checked={contactDetail}
+              onChange={(event) => setContactDetail(event.target.checked)}
+            />{' '}
+            Contact detail
+          </label>
+        )}
+        {!highQuality && (
+          <button
+            onClick={() => {
+              setPerformanceReport('Measuring rendered frames for 5 seconds…');
+              setBenchmark((value) => value + 1);
+            }}
+          >
+            Measure FPS
+          </button>
+        )}
+        <span role="status" data-testid="render-status">
+          {loading.active
+            ? `Loading assets ${Math.round(loading.progress)}%`
+            : highQuality
+              ? progress.phase === 'error'
+                ? progress.message
+                : progress.phase === 'preparing'
+                  ? `Preparing geometry ${Math.round(progress.progress * 100)}%`
+                  : progress.phase === 'compiling'
+                    ? 'Compiling path-tracing shader…'
+                    : `${progress.phase === 'complete' ? 'Complete' : 'Rendering'} · ${progress.samples}/${HIGH_QUALITY_SAMPLES} samples`
+              : 'Interactive · licensed visual proxies'}
+        </span>
+        {highQuality && progress.phase !== 'error' && (
+          <progress
+            aria-label="Render progress"
+            max={1}
+            value={progress.progress}
+          />
+        )}
+        {!highQuality && performanceReport && (
+          <output data-testid="render-performance">{performanceReport}</output>
+        )}
       </div>
       <div className="viewport-caption">
         {settings.cutaway ? 'Cutaway' : 'Full-height walls'} ·{' '}
@@ -252,6 +353,14 @@ export default function SceneView({
           <span>Perspective</span>
         </button>
         <span className="tool-divider" />
+        <button
+          aria-label="Interior eye-level view"
+          title="Interior eye-level view"
+          onClick={() => camera('interior')}
+        >
+          <ScanEye size={16} />
+          <span>Interior</span>
+        </button>
         <button
           aria-label="Zoom out 3D"
           title="Zoom out"

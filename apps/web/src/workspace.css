@@ -982,3 +982,47 @@
     font-size: 12px;
   }
 }
+.render-toolbar {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 125px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  z-index: 3;
+  font-size: 11px;
+  color: #e9e6da;
+  pointer-events: none;
+}
+.render-toolbar > * {
+  pointer-events: auto;
+}
+.render-toolbar button,
+.render-toolbar label,
+.render-toolbar output,
+.render-toolbar [role='status'] {
+  background: #1b2b24e8;
+  border: 1px solid #536052;
+  border-radius: 6px;
+  padding: 7px 9px;
+  color: inherit;
+}
+.render-toolbar button.active {
+  background: #5a7047;
+}
+.render-toolbar label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.render-toolbar progress {
+  width: 80px;
+  accent-color: #adbb86;
+}
+.three-view .viewport-caption {
+  top: 64px;
+  bottom: auto;
+  left: 16px;
+}
