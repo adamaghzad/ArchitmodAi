@@ -2,6 +2,8 @@
 
 Last updated: 2026-11-04.
 
+The README now includes actual rendered interior examples and a matching floor plan, as requested by the user. The gallery reuses tracked Japandi office, pastel bedroom and style-comparison screenshots, with links to their source reviews.
+
 ## Interior design knowledge — current implementation
 
 The user authorized five structured style profiles with all-room furnishing templates and shared Requirements/Furniture/Materials retrieval. Implemented profiles live in `data/interior_styles.json`; legacy style names resolve as aliases. Product ranking combines soft style, dimensions, remaining purchase-unit budget and existing EmbeddingGemma similarity with recorded offline/failure fallback. Explicit quantities/exclusions override templates; geometry and catalogue provenance remain authoritative. Completeness distinguishes explicit requests, template suggestions and material/palette/lighting preferences. Both UI selectors expose the five styles, and canonical furniture colours/lamp light/finish choices reach Three.js and the 2D floor colour. No new models or asset collections were downloaded. See [knowledge design and verification](docs/INTERIOR_DESIGN_KNOWLEDGE.md) and HANDOFF for actual check results.

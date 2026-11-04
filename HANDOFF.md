@@ -1,5 +1,9 @@
 # Handoff
 
+## README visual examples — 2026-11-04
+
+Added a gallery near the top of README with five existing application screenshots: the Japandi office in high-quality mode, the pastel bedroom and its 2D floor plan, and Scandinavian/Industrial style comparisons. Images have descriptive alt text, links to full-size files, and links to scene/asset/verification documentation. No new images, dependencies or application behavior were introduced. `npm run format:check`, `git diff --check` and existence/image-integrity checks for all five references passed. Full workflow tests were not repeated for this documentation-only update; the preceding implementation results remain recorded below.
+
 ## Interior design knowledge base — 2026-11-04
 
 Implemented the requested five structured style profiles in `data/interior_styles.json`, validated retrieval and legacy aliases, all-five-room templates and profile context for Requirements, Furniture, Materials, scoped instructions and recommendations. Ranking combines style (45%), dimensions (20%), remaining purchase-unit budget (15%) and cached EmbeddingGemma cosine similarity (20%); model failures/offline mode are explicitly traced and reweighted. No new weights, asset libraries or dependencies were downloaded. Explicit requests/exclusions remain separate from preferences. Essential placement retains affordable alternatives and reserves other essential costs before selecting a preferred bed. Existing metric geometry, catalogue dimensions/prices/provenance, Shapely/OR-Tools checks and the canonical Three.js scene remain authoritative.

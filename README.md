@@ -8,6 +8,32 @@ A local workspace for exploring floor plans and interior layouts, based on [the 
 
 The application connects a React/TypeScript 2D and 3D editor to a FastAPI backend. One canonical scene drives both views. OR-Tools generates rectangular layouts, Shapely checks geometry, and LangGraph workflows place sample catalogue furniture and generate reviewable furniture/material recommendations. Drafts remain separate from approved snapshots.
 
+## Example interiors
+
+Actual screenshots from ArchAI Studio, showing furnished 5 × 4 m rooms, their floor plans and different style profiles. Click an image to view it at full size.
+
+### Japandi home office
+
+A walnut desk, ergonomic chair, filled bookshelf and reading corner in the optional high-quality rendering mode. [Scene details and asset credits](docs/RENDERING.md).
+
+[![Japandi home office shown in ArchAI Studio's high-quality 3D renderer](docs/rendering/office-high-quality.png)](docs/rendering/office-high-quality.png)
+
+### Pastel bedroom: 3D and floor plan
+
+An upholstered bed, paired bedside tables, vanity, wardrobe and reading area. [Bedroom generation and verification](docs/bedroom/README.md).
+
+| Furnished bedroom                                                                                                                     | 2D floor plan                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Pastel bedroom with blush bedding, sage accents and light oak flooring](docs/bedroom/after-live.png)](docs/bedroom/after-live.png) | [![Floor plan of the furnished pastel bedroom with furniture footprints and room dimensions](docs/bedroom/plan.png)](docs/bedroom/plan.png) |
+
+### Same room, different styles
+
+The same room dimensions with different furniture, finishes and colours. [Style profiles and comparison evidence](docs/INTERIOR_DESIGN_KNOWLEDGE.md).
+
+| Scandinavian                                                                                                                                             | Industrial                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Scandinavian bedroom with pale wood flooring and soft blue-grey bedding](docs/style-profiles/scandinavian.png)](docs/style-profiles/scandinavian.png) | [![Industrial bedroom with darker wood furniture, grey flooring and warm walls](docs/style-profiles/industrial.png)](docs/style-profiles/industrial.png) |
+
 ## Run locally
 
 Prerequisites:
