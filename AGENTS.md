@@ -15,3 +15,5 @@ Record new agreed rules in DEVELOPMENT_RULES.md and keep this reference current.
 Use [README.md](README.md) for setup and commands, [architecture](docs/ARCHITECTURE.md) for scene/inference boundaries, and [testing](docs/TESTING.md) for verification. Run `npm test`, `npm run lint`, `npm run format:check`, `npm run test:e2e`, and `npm run build` for implementation changes that affect the full workflow. Keep tests isolated from development data and live inference; record intentional live-model checks separately.
 
 The current rendering and workspace requirements are recorded in [workspace upgrade](docs/WORKSPACE_UPGRADE.md). Preserve metric geometry and catalogue provenance while improving appearance; optional assets require source/license metadata and a procedural fallback.
+
+The latest approved licensed-rendering milestone and reproducible Japandi office review are recorded in [interior rendering](docs/RENDERING.md). Preserve the existing scene JSON and unrelated backend workflows, and keep performance claims tied to measured adapter, resolution and conditions.
