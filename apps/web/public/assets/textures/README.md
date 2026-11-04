@@ -1,5 +1,3 @@
-# Texture assets
+# Local PBR scans
 
-The current renderer generates lightweight wood, fabric, ceramic, stone and plaster textures procedurally. No external texture pack is included or downloaded. The procedural sources are maintained in `src/editor3d/materials.ts`.
-
-Future licensed texture files can be stored here. Record their source, license and required attribution before using them in material definitions. Color maps use sRGB; roughness, bump and normal data remain linear.
+Selected 1k Poly Haven wood floor, walnut and plaster maps are included under CC0. [The manifest](../manifest.json) records source and author information. Repeats use metres; normal and roughness maps use linear colour space. Paint keeps the chosen colour while using subtle scanned normal/roughness detail. Fabric/rug and ceramic fallback materials remain procedural. A local 1k CC0 HDRI lives in `../environments/`.

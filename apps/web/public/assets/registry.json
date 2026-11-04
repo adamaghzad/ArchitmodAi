@@ -1,3 +1,175 @@
 {
-  "models": []
+  "models": [
+    {
+      "id": "walnut-desk:sample_desk",
+      "productId": "sample_desk",
+      "url": "/assets/models/walnut-desk.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/linea-140-walnut-writing-desk-c94a30dc",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "walnut-desk:wide_desk",
+      "productId": "wide_desk",
+      "url": "/assets/models/walnut-desk.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/linea-140-walnut-writing-desk-c94a30dc",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "walnut-desk:wall_desk",
+      "productId": "wall_desk",
+      "url": "/assets/models/walnut-desk.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/linea-140-walnut-writing-desk-c94a30dc",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "ergonomic-chair:task_chair",
+      "productId": "task_chair",
+      "url": "/assets/models/ergonomic-chair.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/vector-ergonomic-office-chair-ae299d68",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "bookshelf:bookcase",
+      "productId": "bookcase",
+      "url": "/assets/models/bookshelf.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/filled-bookshelf-small-original-interior-furnishing-2f38979c",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "reading-chair:fabric_chair",
+      "productId": "fabric_chair",
+      "url": "/assets/models/reading-chair.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/petal-shell-pedestal-armchair-261bd2b4",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "sofa:sample_sofa",
+      "productId": "sample_sofa",
+      "url": "/assets/models/sofa.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/haven-224-oatmeal-two-seat-sofa-40262c27",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "bed:sample_bed",
+      "productId": "sample_bed",
+      "url": "/assets/models/bed.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/platform-bed-with-bedding-original-interior-furnishing-d69cf237",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "wardrobe:wardrobe",
+      "productId": "wardrobe",
+      "url": "/assets/models/wardrobe.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/linea-120-textile-panel-wardrobe-d7898f5e",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "vanity:sample_vanity",
+      "productId": "sample_vanity",
+      "url": "/assets/models/vanity.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/basin-90-freestanding-bathroom-vanity-c58c9ba0",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "toilet:sample_toilet",
+      "productId": "sample_toilet",
+      "url": "/assets/models/toilet.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/compact-wc-close-coupled-toilet-84214efd",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "side-table:stone_table",
+      "productId": "stone_table",
+      "url": "/assets/models/side-table.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/orbit-45-travertine-side-table-d2e9684b",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    },
+    {
+      "id": "floor-lamp:floor_lamp",
+      "productId": "floor_lamp",
+      "url": "/assets/models/floor-lamp.glb",
+      "source": "https://www.innerscene.com/tools/library/3d-parts/paper-column-paper-column-floor-lamp-3b5a06e7",
+      "license": "CC0-1.0",
+      "author": "Innerscene",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "minFootprintFill": 0.65
+    }
+  ],
+  "materials": [
+    {
+      "id": "wood_floor",
+      "finish": "floor",
+      "source": "https://polyhaven.com/a/wood_floor",
+      "license": "CC0-1.0",
+      "author": "Dimitrios Savva",
+      "tileMeters": 1.6999996900558472,
+      "map": "/assets/textures/wood_floor/map.jpg",
+      "normalMap": "/assets/textures/wood_floor/normalMap.jpg",
+      "roughnessMap": "/assets/textures/wood_floor/roughnessMap.jpg"
+    },
+    {
+      "id": "american_walnut_veneer",
+      "finish": "wood",
+      "source": "https://polyhaven.com/a/american_walnut_veneer",
+      "license": "CC0-1.0",
+      "author": "Jenelle van Heerden",
+      "tileMeters": 1.0,
+      "map": "/assets/textures/american_walnut_veneer/map.jpg",
+      "normalMap": "/assets/textures/american_walnut_veneer/normalMap.jpg",
+      "roughnessMap": "/assets/textures/american_walnut_veneer/roughnessMap.jpg"
+    },
+    {
+      "id": "white_plaster_02",
+      "finish": "plaster",
+      "source": "https://polyhaven.com/a/white_plaster_02",
+      "license": "CC0-1.0",
+      "author": "Rob Tuytel",
+      "tileMeters": 1.0,
+      "map": "/assets/textures/white_plaster_02/map.jpg",
+      "normalMap": "/assets/textures/white_plaster_02/normalMap.jpg",
+      "roughnessMap": "/assets/textures/white_plaster_02/roughnessMap.jpg"
+    }
+  ],
+  "environment": {
+    "url": "/assets/environments/brown_photostudio_02_1k.hdr",
+    "source": "https://polyhaven.com/a/brown_photostudio_02",
+    "license": "CC0-1.0",
+    "author": "Sergej Majboroda"
+  }
 }
