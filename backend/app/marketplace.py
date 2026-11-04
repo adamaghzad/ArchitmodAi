@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from shapely.geometry import LineString, Polygon
 
+from .access import approach_zones
 from .catalog import CATALOG, Product, fits, search_products
 from .geometry import door_clearances, footprint, placement_clear, validate_scene
 from .materials import material_selection
@@ -17,7 +18,7 @@ def position_for(scene: Scene, product: Product, room_id: str) -> Furniture | No
         return None
     min_x, min_y, max_x, max_y = polygon.bounds
     occupied = [footprint(old).buffer(0.1) for old in scene.furniture]
-    clearances = door_clearances(scene)
+    clearances = [*door_clearances(scene), *approach_zones(scene)]
     region = polygon.buffer(0.0001)
     wall_bodies = [
         LineString([wall.start, wall.end]).buffer(wall.thickness / 2, cap_style=2)
@@ -87,6 +88,8 @@ def add_product(scene: Scene, request: AddProductRequest) -> Scene:
             raise ValueError(
                 "This product cannot fit without crossing boundaries or furniture. Remove an item or choose a smaller product."
             )
+        if isinstance(existing, Furniture):
+            item.id = existing.id
         candidate.furniture.append(item)
     else:
         selection = material_selection(
