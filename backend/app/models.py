@@ -11,6 +11,69 @@ Coordinate = Annotated[float, Field(ge=-100, le=100)]
 Point = tuple[Coordinate, Coordinate]
 Positive = Annotated[float, Field(gt=0, le=100)]
 RoomType = Literal["living", "bedroom", "kitchen", "bathroom", "office"]
+Style = Literal[
+    "Scandinavian",
+    "Japandi",
+    "Korean Pastel",
+    "Modern Minimalist",
+    "Industrial",
+    "Warm minimal",
+    "Contemporary",
+    "Pastel",
+]
+
+
+class FurnitureNeed(Model):
+    role: str = Field(min_length=1, max_length=80)
+    name: str = Field(min_length=1, max_length=120)
+    quantity: int = Field(default=1, ge=1, le=20)
+    room_type: RoomType = "bedroom"
+    priority: Literal["essential", "desired", "optional"] = "desired"
+    origin: Literal["user", "template"] = "user"
+
+
+class InteriorBrief(Model):
+    prompt: str = Field(default="", max_length=2000)
+    furniture: list[FurnitureNeed] = Field(default_factory=list, max_length=40)
+    palette: list[str] = Field(default_factory=list, max_length=24)
+    materials: list[str] = Field(default_factory=list, max_length=24)
+    profile_id: str | None = None
+    profile_revision: int | None = None
+    template_furniture: list[FurnitureNeed] = Field(default_factory=list, max_length=80)
+    excluded_roles: list[str] = Field(default_factory=list, max_length=80)
+
+
+class NeedResult(Model):
+    requirement_id: str
+    room_id: str
+    name: str
+    requested: int
+    placed: int
+    object_ids: list[str] = Field(default_factory=list)
+    product_ids: list[str] = Field(default_factory=list)
+    reason: str | None = None
+    validation_status: str = "pending"
+    rendering_status: str = "awaiting_viewport_audit"
+    origin: Literal["user", "template"] = "user"
+    priority: str = "desired"
+
+
+class CompletionReport(Model):
+    complete: bool
+    items: list[NeedResult]
+    requested_count: int
+    placed_count: int
+    correction_attempts: int = 0
+    material_requirements: list[dict] = Field(default_factory=list)
+    budget_mad: float
+    total_mad: float
+    within_budget: bool
+    geometry_valid: bool
+    geometry_errors: list[str] = Field(default_factory=list)
+    profile_id: str | None = None
+    user_requirements_complete: bool = True
+    template_items: list[NeedResult] = Field(default_factory=list)
+    style_preferences: list[dict] = Field(default_factory=list)
 
 
 class RoomRequirement(Model):
@@ -20,6 +83,14 @@ class RoomRequirement(Model):
 
 class Brief(Model):
     rooms: list[RoomRequirement] = Field(min_length=1, max_length=8)
+    furniture: list[FurnitureNeed] = Field(default_factory=list, max_length=40)
+    palette: list[str] = Field(default_factory=list, max_length=12)
+    materials: list[str] = Field(default_factory=list, max_length=12)
+    excluded_roles: list[str] = Field(
+        default_factory=list,
+        max_length=80,
+        description="Explicit exclusions as room_type:role, such as office:plant",
+    )
 
 
 class GenerateRequest(Model):
@@ -27,9 +98,11 @@ class GenerateRequest(Model):
     width_m: float = Field(ge=3, le=25)
     depth_m: float = Field(ge=3, le=25)
     budget_mad: float = Field(default=20000, ge=0, le=10000000)
-    style: Literal["Warm minimal", "Scandinavian", "Contemporary"] = "Warm minimal"
+    style: Style = "Warm minimal"
     prompt: str = Field(default="", max_length=2000)
     use_model: bool = False
+    furnish: bool = False
+    use_semantic: bool = True
     rooms: list[RoomRequirement] = Field(min_length=1, max_length=8)
 
 
@@ -72,6 +145,12 @@ class Furniture(Model):
     room_id: str
     position: Point
     rotation_deg: Literal[0, 90, 180, 270] = 0
+    requirement_id: str | None = None
+    support_id: str | None = None
+    elevation_m: float = Field(default=0, ge=0, le=5)
+    fabric_color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    wood_color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    light_color: str | None = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
 
 
 class MaterialSelection(Model):
@@ -118,6 +197,8 @@ class Scene(Model):
     materials: list[MaterialSelection] = Field(default_factory=list, max_length=1000)
     notes: list[str] = Field(default_factory=list)
     design_assumptions: DesignAssumptions = Field(default_factory=DesignAssumptions)
+    design_brief: InteriorBrief | None = None
+    design_trace: list[dict] = Field(default_factory=list, max_length=2000)
 
 
 class Issue(Model):
@@ -135,6 +216,7 @@ class ValidationReport(Model):
     sample_prices: bool = True
     furniture_total_mad: float = 0
     materials_total_mad: float = 0
+    completeness: CompletionReport | None = None
 
 
 class AgentOperation(Model):
@@ -238,11 +320,12 @@ class EditRequest(AgentOperation, RevisionRequest):
 
 class FurnishRequest(RevisionRequest):
     use_ai: bool = False
+    use_semantic: bool = True
 
 
 class UpdateBriefRequest(RevisionRequest):
     budget_mad: float = Field(ge=0, le=10000000)
-    style: Literal["Warm minimal", "Scandinavian", "Contemporary"]
+    style: Style
     design_assumptions: DesignAssumptions | None = None
 
 
@@ -262,7 +345,7 @@ class InstructionIntent(Model):
         "edit_objects",
     ]
     object_ids: list[str] = Field(default_factory=list, max_length=20)
-    style: Literal["Warm minimal", "Scandinavian", "Contemporary"] | None = None
+    style: Style | None = None
     budget_mad: float | None = Field(default=None, ge=0, le=10000000)
     explanation: str = Field(min_length=1, max_length=1000)
 
@@ -294,8 +377,8 @@ class RemoveProductRequest(RevisionRequest):
 
 
 class ProductAdvice(Model):
-    product_ids: list[str] = Field(max_length=8)
-    explanations: list[str] = Field(max_length=8)
+    product_ids: list[str] = Field(max_length=40)
+    explanations: list[str] = Field(max_length=40)
 
 
 class LayoutOrder(Model):

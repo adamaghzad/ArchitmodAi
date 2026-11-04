@@ -1,0 +1,1250 @@
+{
+  "schema_version": 1,
+  "authorship": "ArchAI Studio curated application profiles; wording and templates authored for this project.",
+  "profiles": [
+    {
+      "id": "scandinavian",
+      "name": "Scandinavian",
+      "revision": 1,
+      "aliases": [],
+      "palette": [
+        {
+          "name": "warm white",
+          "hex": "#f1eee5",
+          "usage": "base"
+        },
+        {
+          "name": "pale oak",
+          "hex": "#dcc7a1",
+          "usage": "wood"
+        },
+        {
+          "name": "mist blue",
+          "hex": "#aebfc5",
+          "usage": "fabric"
+        },
+        {
+          "name": "muted sage",
+          "hex": "#b1bea6",
+          "usage": "accent"
+        }
+      ],
+      "preferred_furniture_categories": [
+        "bed",
+        "sofa",
+        "desk",
+        "table",
+        "chair",
+        "storage",
+        "rug"
+      ],
+      "preferred_materials": ["oak", "pine", "linen", "cotton", "wool"],
+      "lighting": {
+        "temperature_kelvin": 3000,
+        "lamp_color": "#ffe9cb",
+        "daylight": "Keep window approaches usable and favor natural light.",
+        "ambient": "Diffuse background illumination without excessive glare.",
+        "task": "Provide local light at work, reading or bedside positions.",
+        "accent": "Optional warm secondary light after functional needs."
+      },
+      "design_characteristics": [
+        "functional furniture",
+        "light timber",
+        "clear circulation",
+        "soft woven layers",
+        "restrained storage"
+      ],
+      "room_templates": {
+        "living": [
+          {
+            "role": "sofa",
+            "name": "Sofa",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "office": [
+          {
+            "role": "desk",
+            "name": "Desk",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Chair",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "kitchen": [
+          {
+            "role": "storage",
+            "name": "Kitchen counter",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Dining table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Dining chairs",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bathroom": [
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "toilet",
+            "name": "Toilet",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "shower",
+            "name": "Shower",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "storage",
+            "name": "Bathroom shelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bedroom": [
+          {
+            "role": "bed",
+            "name": "Double bed",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bedside_table",
+            "name": "Bedside table",
+            "quantity": 2,
+            "priority": "desired"
+          },
+          {
+            "role": "wardrobe",
+            "name": "Wardrobe",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 2,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ]
+      },
+      "catalogue_affinities": {
+        "queen_bed": 1,
+        "white_nightstand": 1,
+        "compact_sofa": 1,
+        "round_table": 1,
+        "wall_desk": 1,
+        "bookcase": 0.7,
+        "open_shelf": 0.2
+      },
+      "surface_preferences": {
+        "floor": ["light_floor", "vinyl_floor"],
+        "walls": ["white_paint", "sage_paint"]
+      },
+      "sources": ["https://www.ikea.com/us/en/ideas/styles/scandinavian/"],
+      "scope_note": "Project-authored preferences, not cultural rules or mandatory architectural constraints.",
+      "surface_preferences_by_room": {
+        "bathroom": {
+          "floor": ["bath_floor", "grey_floor"],
+          "walls": ["white_paint", "wall_tile"]
+        }
+      }
+    },
+    {
+      "id": "japandi",
+      "name": "Japandi",
+      "revision": 1,
+      "aliases": ["Warm minimal"],
+      "palette": [
+        {
+          "name": "warm cream",
+          "hex": "#e2dcc8",
+          "usage": "base"
+        },
+        {
+          "name": "walnut",
+          "hex": "#ac8968",
+          "usage": "wood"
+        },
+        {
+          "name": "oat linen",
+          "hex": "#c6b9a2",
+          "usage": "fabric"
+        },
+        {
+          "name": "olive grey",
+          "hex": "#8f9b82",
+          "usage": "accent"
+        }
+      ],
+      "preferred_furniture_categories": [
+        "bed",
+        "sofa",
+        "desk",
+        "table",
+        "storage",
+        "lighting"
+      ],
+      "preferred_materials": [
+        "oak",
+        "wood",
+        "linen",
+        "ceramic",
+        "wool",
+        "stone"
+      ],
+      "lighting": {
+        "temperature_kelvin": 2700,
+        "lamp_color": "#ffe1aa",
+        "daylight": "Keep window approaches usable and favor natural light.",
+        "ambient": "Diffuse background illumination without excessive glare.",
+        "task": "Provide local light at work, reading or bedside positions.",
+        "accent": "Optional warm secondary light after functional needs."
+      },
+      "design_characteristics": [
+        "calm negative space",
+        "natural tactile surfaces",
+        "simple low visual mass",
+        "crafted timber",
+        "limited decoration"
+      ],
+      "room_templates": {
+        "living": [
+          {
+            "role": "sofa",
+            "name": "Sofa",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "office": [
+          {
+            "role": "desk",
+            "name": "Desk",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Chair",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "kitchen": [
+          {
+            "role": "storage",
+            "name": "Kitchen counter",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Dining table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Dining chairs",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bathroom": [
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "toilet",
+            "name": "Toilet",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "shower",
+            "name": "Shower",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "storage",
+            "name": "Bathroom shelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bedroom": [
+          {
+            "role": "bed",
+            "name": "Double bed",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "wardrobe",
+            "name": "Wardrobe",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bedside_table",
+            "name": "Bedside table",
+            "quantity": 2,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "bench",
+            "name": "Bench",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ]
+      },
+      "catalogue_affinities": {
+        "sample_bed": 1,
+        "queen_bed": 0.6,
+        "nightstand": 1,
+        "sample_sofa": 1,
+        "sample_table": 1,
+        "sample_desk": 1,
+        "bookcase": 1,
+        "open_shelf": 0.1
+      },
+      "surface_preferences": {
+        "floor": ["oak_floor", "sand_floor"],
+        "walls": ["warm_paint"]
+      },
+      "sources": [
+        "https://www.muji.us/products/japandi-style-when-japanese-and-scandinavian-designs-blend"
+      ],
+      "scope_note": "Project-authored preferences, not cultural rules or mandatory architectural constraints.",
+      "surface_preferences_by_room": {
+        "bathroom": {
+          "floor": ["sand_floor", "grey_floor"],
+          "walls": ["warm_paint", "wall_tile"]
+        }
+      }
+    },
+    {
+      "id": "korean-pastel",
+      "name": "Korean Pastel",
+      "revision": 1,
+      "aliases": ["Pastel"],
+      "palette": [
+        {
+          "name": "warm cream",
+          "hex": "#e2dcc8",
+          "usage": "base"
+        },
+        {
+          "name": "light oak",
+          "hex": "#e2cba6",
+          "usage": "wood"
+        },
+        {
+          "name": "blush pink",
+          "hex": "#d9aeb6",
+          "usage": "fabric"
+        },
+        {
+          "name": "sage green",
+          "hex": "#9baa95",
+          "usage": "accent"
+        }
+      ],
+      "preferred_furniture_categories": [
+        "bed",
+        "dressing_table",
+        "table",
+        "chair",
+        "storage",
+        "rug",
+        "plant"
+      ],
+      "preferred_materials": ["light oak", "fabric", "cotton", "ceramic"],
+      "lighting": {
+        "temperature_kelvin": 2700,
+        "lamp_color": "#ffe1aa",
+        "daylight": "Keep window approaches usable and favor natural light.",
+        "ambient": "Diffuse background illumination without excessive glare.",
+        "task": "Provide local light at work, reading or bedside positions.",
+        "accent": "Optional warm secondary light after functional needs."
+      },
+      "design_characteristics": [
+        "soft compact forms",
+        "cream backgrounds",
+        "pastel textile accents",
+        "small reading and dressing corners",
+        "layered warm lamps"
+      ],
+      "room_templates": {
+        "living": [
+          {
+            "role": "sofa",
+            "name": "Sofa",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 2,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "office": [
+          {
+            "role": "desk",
+            "name": "Desk",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Chair",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "kitchen": [
+          {
+            "role": "storage",
+            "name": "Kitchen counter",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Dining table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Dining chairs",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bathroom": [
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "toilet",
+            "name": "Toilet",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "shower",
+            "name": "Shower",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "storage",
+            "name": "Bathroom shelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bedroom": [
+          {
+            "role": "bed",
+            "name": "Double bed with upholstered headboard",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bedside_table",
+            "name": "Bedside table",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "wardrobe",
+            "name": "Wardrobe",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "mirror",
+            "name": "Mirror",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 2,
+            "priority": "desired"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 2,
+            "priority": "optional"
+          }
+        ]
+      },
+      "catalogue_affinities": {
+        "pastel_double_bed": 1,
+        "white_nightstand": 1,
+        "nightstand": 0.4,
+        "dressing_vanity": 1,
+        "fabric_chair": 1,
+        "bookcase": 1,
+        "open_shelf": 0.1,
+        "bed_lamp": 1
+      },
+      "surface_preferences": {
+        "floor": ["pastel_oak_floor"],
+        "walls": ["warm_paint"]
+      },
+      "sources": ["https://design.samsung.com/kr/contents/bespoke/"],
+      "scope_note": "Project-authored Korean-inspired pastel mood; not a claim that Korean interiors follow a single style.",
+      "surface_preferences_by_room": {
+        "bathroom": {
+          "floor": ["bath_floor", "grey_floor"],
+          "walls": ["warm_paint", "wall_tile"]
+        }
+      }
+    },
+    {
+      "id": "modern-minimalist",
+      "name": "Modern Minimalist",
+      "revision": 1,
+      "aliases": ["Contemporary"],
+      "palette": [
+        {
+          "name": "chalk",
+          "hex": "#e5e4d9",
+          "usage": "base"
+        },
+        {
+          "name": "neutral timber",
+          "hex": "#b7b0a2",
+          "usage": "wood"
+        },
+        {
+          "name": "soft graphite",
+          "hex": "#8c9295",
+          "usage": "fabric"
+        },
+        {
+          "name": "charcoal",
+          "hex": "#50575a",
+          "usage": "accent"
+        }
+      ],
+      "preferred_furniture_categories": [
+        "bed",
+        "sofa",
+        "desk",
+        "storage",
+        "table"
+      ],
+      "preferred_materials": [
+        "fabric",
+        "stone composite",
+        "ceramic",
+        "metal",
+        "glass"
+      ],
+      "lighting": {
+        "temperature_kelvin": 3500,
+        "lamp_color": "#fff0d8",
+        "daylight": "Keep window approaches usable and favor natural light.",
+        "ambient": "Diffuse background illumination without excessive glare.",
+        "task": "Provide local light at work, reading or bedside positions.",
+        "accent": "Optional warm secondary light after functional needs."
+      },
+      "design_characteristics": [
+        "simple geometric forms",
+        "limited object count",
+        "concealed storage",
+        "monochrome contrast",
+        "uncluttered functional zones"
+      ],
+      "room_templates": {
+        "living": [
+          {
+            "role": "sofa",
+            "name": "Sofa",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          }
+        ],
+        "office": [
+          {
+            "role": "desk",
+            "name": "Desk",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Chair",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          }
+        ],
+        "kitchen": [
+          {
+            "role": "storage",
+            "name": "Kitchen counter",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Dining table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Dining chairs",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bathroom": [
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "toilet",
+            "name": "Toilet",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "shower",
+            "name": "Shower",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "storage",
+            "name": "Bathroom shelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bedroom": [
+          {
+            "role": "bed",
+            "name": "Double bed",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "wardrobe",
+            "name": "Wardrobe",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bedside_table",
+            "name": "Bedside table",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ]
+      },
+      "catalogue_affinities": {
+        "compact_bed": 1,
+        "modular_sofa": 1,
+        "stone_table": 1,
+        "wide_desk": 1,
+        "wardrobe": 1,
+        "open_shelf": 0.3,
+        "white_nightstand": 0.8
+      },
+      "surface_preferences": {
+        "floor": ["grey_floor", "vinyl_floor"],
+        "walls": ["white_paint"]
+      },
+      "sources": [
+        "https://www.ikea.co.id/en/inspirations/tips-modern-minimalist-interior-design"
+      ],
+      "scope_note": "Project-authored preferences, not cultural rules or mandatory architectural constraints.",
+      "surface_preferences_by_room": {
+        "bathroom": {
+          "floor": ["bath_floor", "grey_floor"],
+          "walls": ["white_paint", "wall_tile"]
+        }
+      }
+    },
+    {
+      "id": "industrial",
+      "name": "Industrial",
+      "revision": 1,
+      "aliases": [],
+      "palette": [
+        {
+          "name": "warm grey",
+          "hex": "#b7b3a9",
+          "usage": "base"
+        },
+        {
+          "name": "dark timber",
+          "hex": "#795d46",
+          "usage": "wood"
+        },
+        {
+          "name": "charcoal cloth",
+          "hex": "#6d7472",
+          "usage": "fabric"
+        },
+        {
+          "name": "rust",
+          "hex": "#ab795f",
+          "usage": "accent"
+        }
+      ],
+      "preferred_furniture_categories": [
+        "storage",
+        "desk",
+        "bed",
+        "table",
+        "lighting"
+      ],
+      "preferred_materials": [
+        "metal",
+        "wood",
+        "oak",
+        "concrete",
+        "glass",
+        "leather"
+      ],
+      "lighting": {
+        "temperature_kelvin": 3000,
+        "lamp_color": "#ffe3b7",
+        "daylight": "Keep window approaches usable and favor natural light.",
+        "ambient": "Diffuse background illumination without excessive glare.",
+        "task": "Provide local light at work, reading or bedside positions.",
+        "accent": "Optional warm secondary light after functional needs."
+      },
+      "design_characteristics": [
+        "exposed functional shelving",
+        "metal and timber contrast",
+        "warm task lighting",
+        "robust finishes",
+        "limited softening textiles"
+      ],
+      "room_templates": {
+        "living": [
+          {
+            "role": "sofa",
+            "name": "Sofa",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "armchair",
+            "name": "Armchair",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "plant",
+            "name": "Plant",
+            "quantity": 1,
+            "priority": "optional"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Open bookshelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "office": [
+          {
+            "role": "desk",
+            "name": "Desk",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Chair",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "kitchen": [
+          {
+            "role": "storage",
+            "name": "Kitchen counter",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "table",
+            "name": "Dining table",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "chair",
+            "name": "Dining chairs",
+            "quantity": 2,
+            "priority": "essential"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bathroom": [
+          {
+            "role": "vanity",
+            "name": "Vanity",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "toilet",
+            "name": "Toilet",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "shower",
+            "name": "Shower",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "storage",
+            "name": "Bathroom shelf",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ],
+        "bedroom": [
+          {
+            "role": "bed",
+            "name": "Double bed",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "wardrobe",
+            "name": "Wardrobe",
+            "quantity": 1,
+            "priority": "essential"
+          },
+          {
+            "role": "bedside_table",
+            "name": "Bedside table",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "bookshelf",
+            "name": "Bookshelf",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "lamp",
+            "name": "Lamp",
+            "quantity": 1,
+            "priority": "desired"
+          },
+          {
+            "role": "rug",
+            "name": "Rug",
+            "quantity": 1,
+            "priority": "optional"
+          }
+        ]
+      },
+      "catalogue_affinities": {
+        "queen_bed": 1,
+        "sample_bed": 0.2,
+        "wide_desk": 1,
+        "open_shelf": 1,
+        "bookcase": 0.2,
+        "desk_lamp": 1,
+        "nightstand": 1,
+        "modular_sofa": 0.8
+      },
+      "surface_preferences": {
+        "floor": ["grey_floor"],
+        "walls": ["clay_paint", "wall_panel"]
+      },
+      "sources": ["https://www.ikea.com/be/en/ideas/styles/industrial/"],
+      "scope_note": "Project-authored preferences, not cultural rules or mandatory architectural constraints.",
+      "surface_preferences_by_room": {
+        "bathroom": {
+          "floor": ["bath_floor", "grey_floor"],
+          "walls": ["white_paint", "wall_tile"]
+        }
+      }
+    }
+  ]
+}
