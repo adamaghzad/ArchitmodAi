@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { RoundedBox } from '@react-three/drei';
-import type { Group } from 'three';
+import { useThree } from '@react-three/fiber';
+import { Box3, Vector2, Vector3, type Group } from 'three';
 import { furnitureParts } from './furnitureParts';
 import { useMaterials } from './materials';
 import { resolveAsset } from './assetRegistry';
@@ -12,26 +13,92 @@ function LocalModel({
   url,
   product,
   fallback,
+  minFootprintFill,
 }: {
   url: string;
   product: Product;
   fallback: React.ReactNode;
+  minFootprintFill?: number;
 }) {
   const [model, setModel] = useState<Group | null>(null);
+  const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
     let active = true;
     loadLocalModel(url).then((result) => {
-      if (active) setModel(result);
+      if (active) {
+        setModel(result);
+        invalidate();
+      }
     });
     return () => {
       active = false;
     };
-  }, [url]);
+  }, [url, invalidate]);
   const instance = useMemo(
-    () => (model ? modelInstance(model, product) : null),
-    [model, product],
+    () => (model ? modelInstance(model, product, minFootprintFill) : null),
+    [model, product, minFootprintFill],
   );
-  return instance ? <primitive object={instance} dispose={null} /> : fallback;
+  return instance ? (
+    <group name={`licensed:${product.id}`}>
+      <primitive object={instance} dispose={null} />
+      {product.id === 'bookcase' && (
+        <BookshelfDecor
+          top={new Box3().setFromObject(instance).getSize(new Vector3()).y}
+          product={product}
+        />
+      )}
+    </group>
+  ) : (
+    fallback
+  );
+}
+
+const vaseProfile = [
+  [0, 0],
+  [0.045, 0],
+  [0.075, 0.035],
+  [0.085, 0.1],
+  [0.06, 0.17],
+  [0.035, 0.2],
+  [0.035, 0.23],
+  [0.028, 0.23],
+  [0.028, 0.2],
+  [0.05, 0.17],
+  [0.075, 0.1],
+  [0.065, 0.04],
+  [0, 0.015],
+].map(([radius, height]) => new Vector2(radius, height));
+function BookshelfDecor({ top, product }: { top: number; product: Product }) {
+  const library = useMaterials();
+  if (
+    product.height_m - top < 0.24 ||
+    product.width_m < 0.6 ||
+    product.depth_m < 0.25
+  )
+    return null;
+  return (
+    <group position={[0, top, 0]} name="bookcase-integral-decor">
+      <mesh
+        position={[-0.15, 0, 0]}
+        material={library.get('ceramic', '#a9957b')}
+        castShadow
+        receiveShadow
+      >
+        <latheGeometry args={[vaseProfile, 32]} />
+      </mesh>
+      {[0, 1].map((i) => (
+        <mesh
+          key={i}
+          position={[0.14, 0.018 + i * 0.036, 0]}
+          material={library.get('fabric', i === 0 ? '#6f7968' : '#c5b391')}
+          castShadow
+          receiveShadow
+        >
+          <boxGeometry args={[0.19, 0.035, 0.22]} />
+        </mesh>
+      ))}
+    </group>
+  );
 }
 
 const ProceduralFurniture = memo(function ProceduralFurniture({
@@ -104,6 +171,7 @@ export default memo(function FurnitureModel({
       url={asset.url}
       product={product}
       fallback={fallback}
+      minFootprintFill={asset.minFootprintFill}
     />
   ) : (
     fallback
