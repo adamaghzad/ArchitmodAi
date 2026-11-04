@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { Shape } from 'three';
 import { area, wallParts, wallColor } from '../geometry';
 import { openingPose, roomSurface } from '../sceneGeometry';
-import { useMaterials, finishFor } from './materials';
+import { useMaterials, finishFor, metricUV } from './materials';
 import type { Finish } from './materials';
 import type { Product, Room, Scene, Wall, Opening } from '../types';
 import type { ViewSettings } from '../editorTypes';
@@ -143,7 +143,10 @@ const WallMesh = memo(function WallMesh({
                 onSelect(wall.id);
               }}
             >
-              <boxGeometry args={[part.length, h, wall.thickness]} />
+              <boxGeometry
+                args={[part.length, h, wall.thickness]}
+                onUpdate={metricUV}
+              />
               <primitive
                 attach="material"
                 object={library.get('plaster', selected ? '#c8d5b1' : color)}
@@ -180,20 +183,23 @@ function ArchitecturalOpening({
   opening,
   selected,
   onSelect,
+  cap,
 }: {
   scene: Scene;
   wall: Wall;
   opening: Opening;
   selected: boolean;
   onSelect: (id: string) => void;
+  cap: number;
 }) {
   const library = useMaterials();
   const { angle, position, swing } = openingPose(wall, opening, scene.rooms);
   const w = opening.width_m,
-    h = opening.height_m,
+    h = Math.min(opening.height_m, cap - opening.sill_m),
     sill = opening.sill_m,
     frame = 0.045;
   const metal = library.get('metal', selected ? '#a7c989' : '#677465');
+  if (h <= 0) return null;
   return (
     <group
       position={[position[0], sill, position[1]]}
@@ -301,7 +307,7 @@ export default function Architecture({
             : finishFor(material.material)
           : tile
             ? 'tile'
-            : 'wood';
+            : 'floor';
         return (
           <RoomFloor
             key={room.id}
@@ -315,7 +321,7 @@ export default function Architecture({
                   ? '#b8b8ab'
                   : '#c6ad86')
             }
-            finish={finish}
+            finish={finish === 'wood' ? 'floor' : finish}
             ceilings={settings.ceilings}
             height={height}
             onSelect={onSelect}
@@ -343,6 +349,15 @@ export default function Architecture({
             scene={scene}
             wall={wall}
             opening={opening}
+            cap={
+              settings.cutaway &&
+              ((wall.start[0] === scene.width_m &&
+                wall.end[0] === scene.width_m) ||
+                (wall.start[1] === scene.depth_m &&
+                  wall.end[1] === scene.depth_m))
+                ? 0.65
+                : wall.height
+            }
             selected={selected === opening.id}
             onSelect={onSelect}
           />
