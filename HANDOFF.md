@@ -1,8 +1,12 @@
 # Handoff
 
+## Empty main and project branch — 2026-11-04
+
+The user explicitly requested an empty `main` with all project work on `dounia-ouakil`. After confirming that the remote project branch contains the complete previous `main` history, replaced remote `main` with the parentless empty commit `eae6b49` using an exact `--force-with-lease`, then updated the local `main` reference. No project files were deleted from the working directory; the active branch remains `dounia-ouakil`. Git verification confirms zero files and one commit on `main`, and zero original commits missing from the project branch. Application tests are not repeated for this Git/documentation-only change.
+
 ## Dounia Ouakil branch — 2026-11-04
 
-The user requested a branch named for Dounia Ouakil containing all their existing commits. Created `dounia-ouakil` from `e604051`, retaining all 140 existing commits and their original authorship. This branch is the current working branch; `main` retains its existing history. The branch is intended to track `origin/dounia-ouakil`. This Git/documentation task changes no application behavior; verification checks commit ancestry, branch tracking and remote/local agreement rather than rerunning application tests.
+The user requested a branch named for Dounia Ouakil containing all their existing commits. Created and pushed `dounia-ouakil` from `e604051`, retaining all 140 existing commits and their original authorship. This branch is the current working branch and tracks `origin/dounia-ouakil`. The subsequent empty-main request above supersedes the original decision to leave `main` unchanged. This Git/documentation task changes no application behavior; verification checks commit ancestry, branch tracking and remote/local agreement rather than rerunning application tests.
 
 ## README visual examples — 2026-11-04
 

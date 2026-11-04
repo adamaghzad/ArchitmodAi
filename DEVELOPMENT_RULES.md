@@ -74,3 +74,7 @@ On 2026-11-04 the user explicitly requested exactly 50 additional, professionall
 ## Bedroom and knowledge base delivery
 
 On 2026-11-04 the user requested committing and pushing the subsequent pending changes in different commits. Group this delivery by cohesive backend, renderer, workspace, tests and documentation concerns; no fixed commit count was requested for this delivery. Preserve existing history and Git identity, exclude local configuration/data/test artifacts, and push the existing branch to `origin` without force.
+
+## Branch ownership and empty main
+
+On 2026-11-04 the user clarified that all project work and existing commits belong on `dounia-ouakil`, while `main` must be empty. This explicitly authorizes the one-time replacement of `main` with an empty root commit, using a lease to protect concurrent changes. Preserve the full original history and authorship on `dounia-ouakil`; continue project work there. This exception does not authorize rewriting other branch histories.

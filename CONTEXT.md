@@ -2,7 +2,7 @@
 
 Last updated: 2026-11-04.
 
-The user requested the `dounia-ouakil` branch containing all existing work. It starts from `e604051` with the complete 140-commit history and preserves commit authorship; the working branch is now `dounia-ouakil`, with `origin/dounia-ouakil` as its remote target.
+The user requested the `dounia-ouakil` branch containing all existing work. It starts from `e604051` with the complete 140-commit history and preserves commit authorship; the working branch is now `dounia-ouakil`, tracking `origin/dounia-ouakil`. The user then explicitly requested an empty `main`. Its previous history is retained on `dounia-ouakil`; local and remote `main` now point to the single empty root commit `eae6b49`, containing no project files.
 
 The README now includes actual rendered interior examples and a matching floor plan, as requested by the user. The gallery reuses tracked Japandi office, pastel bedroom and style-comparison screenshots, with links to their source reviews.
 
