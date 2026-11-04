@@ -94,6 +94,26 @@ export function furnitureParts(product: Product): FurniturePart[] {
       box(0.29, 0.66, 0, 0.32, 0.4, 0.86);
       box(0.29, 0.67, 0.44, 0.28, 0.015, 0.02, 'metal', '#555f4e');
     }
+  } else if (category === 'chair' && product.room_types.includes('office')) {
+    // Task-chair fallback: gas lift, wheeled base, seat, lumbar back and arms.
+    add('cylinder', 0, 0.27, 0, 0.09, 0.39, 0.09, 'metal', '#575b56');
+    box(0, 0.105, 0, 0.85, 0.045, 0.08, 'metal', '#474d48');
+    box(0, 0.105, 0, 0.08, 0.045, 0.85, 'metal', '#474d48');
+    for (const [x, z] of [
+      [-0.4, 0],
+      [0.4, 0],
+      [0, -0.4],
+      [0, 0.4],
+    ])
+      add('sphere', x, 0.055, z, 0.12, 0.11, 0.12, 'dark', '#303630');
+    box(0, 0.43, 0.015, 0.82, 0.1, 0.78, 'fabric');
+    box(0, 0.72, -0.36, 0.79, 0.48, 0.15, 'fabric');
+    box(0, 0.55, -0.31, 0.67, 0.12, 0.12, 'fabric');
+    box(0, 0.975, -0.36, 0.5, 0.05, 0.14, 'fabric');
+    for (const x of [-0.45, 0.45]) {
+      box(x, 0.51, 0.02, 0.035, 0.22, 0.05, 'metal', '#474d48');
+      box(x, 0.62, 0.03, 0.1, 0.045, 0.55, 'dark', '#3c443a');
+    }
   } else if (category === 'chair') {
     legs(0.5);
     box(0, 0.54, 0.03, 0.95, 0.16, 0.94, 'fabric');
@@ -170,6 +190,39 @@ export function furnitureParts(product: Product): FurniturePart[] {
     box(-0.03, 0.55, 0.499, 0.025, 0.1, 0.002, 'metal', '#82907e');
   } else if (category === 'rug') {
     box(0, 0.5, 0, 1, 1, 1, 'fabric');
+  } else if (category === 'storage' && product.room_types.includes('office')) {
+    box(-0.48, 0.5, 0, 0.04, 1, 1);
+    box(0.48, 0.5, 0, 0.04, 1, 1);
+    box(0, 0.5, -0.48, 0.94, 1, 0.04);
+    for (const y of [0.025, 0.22, 0.42, 0.62, 0.82, 0.985]) {
+      box(0, y, 0, 0.94, 0.03, 0.98);
+      if (y > 0.83) continue;
+      for (let i = 0; i < 7; i++) {
+        const x = -0.38 + i * 0.105;
+        const height = 0.1 + (i % 3) * 0.016;
+        box(
+          x,
+          y + 0.016 + height / 2,
+          0.02,
+          0.06,
+          height,
+          0.58,
+          'fabric',
+          ['#c7bca6', '#657563', '#b48b6b', '#e4decf'][i % 4],
+        );
+      }
+      add(
+        'sphere',
+        0.36,
+        y + 0.065,
+        0.08,
+        0.16,
+        0.1,
+        0.4,
+        'ceramic',
+        '#b5ac94',
+      );
+    }
   } else {
     box(0, 0.025, 0, 0.9, 0.05, 0.88, 'dark', '#515845');
     box(0, 0.51, 0, 1, 0.98, 1);
