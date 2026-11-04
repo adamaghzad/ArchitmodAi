@@ -51,23 +51,35 @@ def build_walls(rooms: list[Room], width: float, depth: float) -> list[Wall]:
 
 
 def add_openings(scene: Scene):
-    used = set()
-    for room in scene.rooms:
-        edge = Polygon(room.polygon).boundary.buffer(0.01)
-        candidates = [
-            wall
-            for wall in scene.walls
-            if wall.id not in used
-            and math.dist(wall.start, wall.end) >= 1.2
-            and edge.covers(LineString([wall.start, wall.end]))
+    """One exterior entrance and a spanning tree of real shared-wall doors."""
+    polygons = {room.id: Polygon(room.polygon) for room in scene.rooms}
+    envelope = LineString(
+        [(0, 0), (scene.width_m, 0), (scene.width_m, scene.depth_m), (0, scene.depth_m), (0, 0)]
+    ).buffer(0.002)
+    eligible = [wall for wall in scene.walls if math.dist(wall.start, wall.end) >= 1.2]
+    adjoining = {
+        wall.id: [
+            room.id
+            for room in scene.rooms
+            if polygons[room.id].boundary.buffer(0.002).covers(LineString([wall.start, wall.end]))
         ]
-        if not candidates:
-            continue
-        wall = max(candidates, key=lambda wall: math.dist(wall.start, wall.end))
+        for wall in eligible
+    }
+    root = scene.rooms[0].id
+    exterior = [
+        wall
+        for wall in eligible
+        if root in adjoining[wall.id] and envelope.covers(LineString([wall.start, wall.end]))
+    ]
+    if not exterior:
+        raise PlanningError("No usable exterior entrance can be placed for this layout.")
+    used = set()
+
+    def door(wall, identifier):
         length = math.dist(wall.start, wall.end)
         scene.openings.append(
             Opening(
-                id=f"door_{room.id}",
+                id=identifier,
                 type="door",
                 wall_id=wall.id,
                 offset_m=round((length - 0.9) / 2, 3),
@@ -75,8 +87,25 @@ def add_openings(scene: Scene):
             )
         )
         used.add(wall.id)
+
+    door(max(exterior, key=lambda wall: math.dist(wall.start, wall.end)), "door_entry")
+    reached = {root}
+    while len(reached) < len(scene.rooms):
+        options = [
+            wall
+            for wall in eligible
+            if len(adjoining[wall.id]) == 2 and len(reached.intersection(adjoining[wall.id])) == 1
+        ]
+        if not options:
+            raise PlanningError(
+                "Rooms do not share enough wall length for a connected entrance route."
+            )
+        wall = max(options, key=lambda wall: math.dist(wall.start, wall.end))
+        other = next(room_id for room_id in adjoining[wall.id] if room_id not in reached)
+        door(wall, f"door_{other}")
+        reached.add(other)
     for wall in scene.walls:
-        if wall.id not in used and wall.start[1] == wall.end[1] == 0:
+        if wall.id not in used and envelope.covers(LineString([wall.start, wall.end])):
             length = math.dist(wall.start, wall.end)
             if length >= 1.6:
                 scene.openings.append(
@@ -138,6 +167,25 @@ def solve_layout(request: GenerateRequest, project_id: str) -> Scene:
         areas.append(area)
         distortions.append(distortion)
     model.add_no_overlap_2d(x_intervals, y_intervals)
+    # Every room shares at least 1.2 m of wall with a predecessor, producing a
+    # connected adjacency graph before selecting actual door positions.
+    for i, (x, y, w, d) in enumerate(variables):
+        if i == 0:
+            continue
+        neighbors = []
+        for j, (ox, oy, ow, od) in enumerate(variables[:i]):
+            for direction in range(4):
+                link = model.new_bool_var(f"connect_{i}_{j}_{direction}")
+                if direction < 2:
+                    model.add(x == ox + ow if direction == 0 else x + w == ox).only_enforce_if(link)
+                    model.add(y + d >= oy + 12).only_enforce_if(link)
+                    model.add(oy + od >= y + 12).only_enforce_if(link)
+                else:
+                    model.add(y == oy + od if direction == 2 else y + d == oy).only_enforce_if(link)
+                    model.add(x + w >= ox + 12).only_enforce_if(link)
+                    model.add(ox + ow >= x + 12).only_enforce_if(link)
+                neighbors.append(link)
+        model.add_bool_or(neighbors)
     model.add(variables[0][0] == 0)
     model.add(variables[0][1] == 0)
     model.maximize(sum(areas) * 100 - sum(distortions))
@@ -176,8 +224,8 @@ def solve_layout(request: GenerateRequest, project_id: str) -> Scene:
         budget_mad=request.budget_mad,
         style=request.style,
         notes=[
-            "Rectangular layout on a 0.1 m grid. Wall thickness is visual; areas use wall centre lines.",
-            "Door positions are proposals. Adjacency, daylight, and accessible circulation need review.",
+            "Rectangular layout on a 0.1 m grid. Areas use wall centre lines; collision checks include actual wall thickness.",
+            "Shared-wall doors connect rooms to an exterior entrance. Circulation uses declared design assumptions, not legal building rules.",
             "Text interpreted by Ollama."
             if request.use_model
             else "Generated from the explicit room list.",
