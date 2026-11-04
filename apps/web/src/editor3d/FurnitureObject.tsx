@@ -97,9 +97,13 @@ export default memo(function FurnitureObject({
   };
   return (
     <group
-      position={[x, 0.02, y]}
+      position={[x, 0.012, y]}
       rotation={[0, (-shown.rotation_deg * Math.PI) / 180, 0]}
       name={`furniture:${item.id}`}
+      userData={{
+        productId: product.id,
+        dimensions: [product.width_m, product.height_m, product.depth_m],
+      }}
       onClick={(event) => {
         event.stopPropagation();
         onSelect(item.id);
